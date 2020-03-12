@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+plugins=(git)
+plugins=(vi-mode)
