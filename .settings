@@ -17,14 +17,6 @@ _comp_options+=(globdots)
 
 
 #
-# resetting terminal colors (issue debugging)
-#
-# unset LSCOLORS
-# export CLICOLOR=1
-# export CLICOLOR_FORCE=1
-
-
-#
 # vi mode cursor mode
 #
 function zle-keymap-select {
