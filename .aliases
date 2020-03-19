@@ -1,20 +1,23 @@
 #!/bin/zsh
-
-function re-source() {
-    mv $HOME/.zshrc $HOME/.zshrc_old
-    cp $HOME/Repositories/dot-files/.zshrc  $HOME
-    source ~/.zshrc
-}
-
-
+#
+# common aliases
+#
 alias e='exit'
-alias q='exit'
-alias cl='clear; l'
-alias r='re-source'
-alias list-aliases="{ alias; git aliases; } | sort"
+alias c='clear'
+alias lals="{ alias; git aliases; } | sort"
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 
 
+#
+# exa aliases
+#
+alias ls='exa --git-ignore --group-directories-first -la'
+alias cl='clear; exa --git-ignore --group-directories-first -la'
+
+
+# 
+# git, vim, tmux, mutt, latex, and markdown specific aliases 
+#
 source $HOME/Repositories/dot-files/git-config/.aliases
 source $HOME/Repositories/dot-files/vim-config/.aliases
 source $HOME/Repositories/dot-files/tmux-config/.aliases

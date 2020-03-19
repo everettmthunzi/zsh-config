@@ -69,3 +69,14 @@ for m in visual viopp; do
         bindkey -M $m $c select-bracketed
     done
 done
+
+
+#
+# sourcing .zshrc
+#
+function re-source() {
+    mv $HOME/.zshrc $HOME/.zshrc_old
+    cp $HOME/Repositories/dot-files/.zshrc  $HOME
+    source ~/.zshrc
+}
+alias r='re-source'
