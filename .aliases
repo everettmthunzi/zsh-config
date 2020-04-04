@@ -7,16 +7,14 @@ alias c='clear'
 alias lals="{ alias; git aliases; } | sort"
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 
-
 #
 # exa aliases
 #
 alias ls='exa --git-ignore --group-directories-first -la'
 alias cl='clear; exa --git-ignore --group-directories-first -la'
 
-
-# 
-# git, vim, tmux, mutt, latex, and markdown specific aliases 
+#
+# git, vim, tmux, mutt, latex, and markdown specific aliases
 #
 source $HOME/Repositories/dot-files/git-config/.aliases
 source $HOME/Repositories/dot-files/vim-config/.aliases
