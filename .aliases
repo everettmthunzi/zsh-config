@@ -1,7 +1,38 @@
 #!/bin/zsh
+
+#
+# sourcing .zshrc
+#
+function src() {
+    # todo: refine function!
+    mv $HOME/.zshrc $HOME/.zshrc_old
+    cp $HOME/Repositories/dot-files/.zshrc  $HOME
+    source ~/.zshrc
+}
+
+#
+# opening *.pdf and *.md files
+#
+function opn() {
+    FILE="$1"
+    if [ "${FILE: -4}" == ".md" ];then
+        pandoc "$FILE" | lynx -stdin
+
+    else
+        if [[ "$OSTYPE" == "linux-gnu" ]]; then
+            xdg-open "$FILE"
+        elif [[ "$OSTYPE" == "darwin"* ]]; then
+            echo "opening pdf"
+            open "$FILE"
+        fi
+    fi
+}
+
 #
 # common aliases
 #
+alias src='src'
+alias opn='opn'
 alias e='exit'
 alias c='clear'
 alias lals="{ alias; git aliases; } | sort"
