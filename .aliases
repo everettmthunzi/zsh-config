@@ -50,6 +50,5 @@ alias cl='clear; exa --git-ignore --group-directories-first -la'
 source $HOME/Repositories/dot-files/git-config/.aliases
 source $HOME/Repositories/dot-files/vim-config/.aliases
 source $HOME/Repositories/dot-files/tmux-config/.aliases
-source $HOME/Repositories/dot-files/mutt-config/.aliases
 source $HOME/Repositories/dot-files/latex-config/.aliases
 source $HOME/Repositories/dot-files/markdown-config/.aliases
