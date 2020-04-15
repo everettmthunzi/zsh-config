@@ -15,14 +15,16 @@ function src() {
 #
 function opn() {
     FILE="$1"
-    if [ "${FILE: -4}" == ".md" ];then
-        pandoc "$FILE" | lynx -stdin
+    echo "-- opening $FILE"
 
-    else
+    if [ "${FILE##*.}" = "md" ]; then
+        pandoc $FILE | lynx -stdin
+
+    elif [ "${FILE##*.}" = "pdf" ]; then
         if [[ "$OSTYPE" == "linux-gnu" ]]; then
             xdg-open "$FILE"
+
         elif [[ "$OSTYPE" == "darwin"* ]]; then
-            echo "opening pdf"
             open "$FILE"
         fi
     fi
