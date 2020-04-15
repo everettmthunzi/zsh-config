@@ -1,9 +1,15 @@
 #!/bin/zsh
-
-#
-# Huge thanks to:
+# <ref>
 # https://gist.github.com/aquaductape/
 # https://gist.github.com/LukeSmithxyz/
+
+#
+# making sure vim is persistent in linux-gnu environments
+#
+if [[ "$OSTYPE" == "linux-gnu" ]]; then
+    export EDITOR=/usr/bin/vim
+    export VISUAL=/usr/bin/vim
+fi
 
 
 #
@@ -15,23 +21,21 @@ zmodload zsh/complist
 compinit
 _comp_options+=(globdots)
 
-
 #
 # vi mode cursor mode
 #
 bindkey -v
 export KEYTIMEOUT=1
 
-
 function zle-keymap-select {
-if [[ ${KEYMAP} == vicmd ]] ||
-    [[ $1 = 'block' ]]; then
+    if [[ ${KEYMAP} == vicmd ]] ||
+        [[ $1 = 'block' ]]; then
     echo -ne '\e[1 q'
 elif [[ ${KEYMAP} == main ]] ||
     [[ ${KEYMAP} == viins ]] ||
     [[ ${KEYMAP} = '' ]] ||
     [[ $1 = 'beam' ]]; then
-    echo -ne '\e[5 q'
+echo -ne '\e[5 q'
 fi
 }
 zle -N zle-keymap-select
@@ -47,9 +51,8 @@ preexec() {
     echo -ne '\e[5 q';  # use beam shape cursor for each new prompt.
 }
 
-
 #
-# change in quotation marks
+# change in quotation marks (the equivalent of Tim Popes' surround)
 #
 autoload -U select-quoted
 zle -N select-quoted
@@ -59,9 +62,8 @@ for m in visual viopp; do
     done
 done
 
-
 #
-# change in brackets
+# change in brackets (the equivalent of Tim Popes' surround)
 #
 autoload -U select-bracketed
 zle -N select-bracketed
@@ -70,14 +72,3 @@ for m in visual viopp; do
         bindkey -M $m $c select-bracketed
     done
 done
-
-
-#
-# sourcing .zshrc
-#
-function re-source() {
-mv $HOME/.zshrc $HOME/.zshrc_old
-cp $HOME/Repositories/dot-files/.zshrc  $HOME
-source ~/.zshrc
-}
-alias r='re-source'
