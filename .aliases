@@ -11,6 +11,16 @@ function src() {
 }
 
 #
+# reading *.md files locally
+#
+function rmd() {
+    grip README.md --export
+    open -a Safari README.html
+    sleep 2
+    rm -rf README.html
+}
+
+#
 # opening *.pdf and *.md files
 #
 function opn() {
@@ -33,6 +43,7 @@ function opn() {
 #
 # common aliases
 #
+alias rmd='rmd >/dev/null 2>&1'
 alias src='src'
 alias opn='opn'
 alias e='exit'
