@@ -50,7 +50,7 @@ alias src='src'
 alias opn='opn'
 alias e='exit'
 alias c='clear'
-alias lals="{ alias; git aliases; } | sort"
+alias aliases="{ alias; git aliases; } | sort"
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 
 #
