@@ -13,6 +13,12 @@ fi
 
 
 #
+# to update !!!
+#
+export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+
+
+#
 # auto/tab complete:
 #
 autoload -U compinit

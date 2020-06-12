@@ -40,6 +40,8 @@ function opn() {
     fi
 }
 
+alias java11='export JAVA_HOME=$JAVA_11_HOME'
+
 #
 # common aliases
 #
@@ -65,3 +67,6 @@ source $HOME/Repositories/dot-files/mutt-config/.aliases
 source $HOME/Repositories/dot-files/vim-config/.aliases
 source $HOME/Repositories/dot-files/tmux-config/.aliases
 source $HOME/Repositories/dot-files/latex-config/.aliases
+
+
+
