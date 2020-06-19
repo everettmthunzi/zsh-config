@@ -3,6 +3,7 @@
 # https://gist.github.com/aquaductape/
 # https://gist.github.com/LukeSmithxyz/
 
+
 #
 # making sure vim is persistent in linux-gnu environments
 #
@@ -12,13 +13,9 @@ if [[ "$OSTYPE" == "linux-gnu" ]]; then
 fi
 
 
-#
-# to update !!!
-#
 export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
+export GPG_TTY=$(tty)
 
-
-#
 # auto/tab complete:
 #
 autoload -U compinit
