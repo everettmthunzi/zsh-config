@@ -1,23 +1,9 @@
 #!/bin/zsh
-# <ref>
-# https://gist.github.com/aquaductape/
-# https://gist.github.com/LukeSmithxyz/
+# see@ https://gist.github.com/aquaductape/
+# see@ https://gist.github.com/LukeSmithxyz/
 
 
-#
-# making sure vim is persistent in linux-gnu environments
-#
-if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    export EDITOR=/usr/bin/vim
-    export VISUAL=/usr/bin/vim
-fi
-
-
-export JAVA_11_HOME=$(/usr/libexec/java_home -v11)
-export GPG_TTY=$(tty)
-
-# auto/tab complete:
-#
+# -- auto-tab complete
 autoload -U compinit
 zstyle ':completion:*' menu select
 zmodload zsh/complist
@@ -25,12 +11,9 @@ compinit
 _comp_options+=(globdots)
 compaudit | xargs chmod g-w
 
-#
-# vi mode cursor mode
-#
-bindkey -v
-export KEYTIMEOUT=1
 
+# -- vi cursor mode
+bindkey -v
 function zle-keymap-select {
     if [[ ${KEYMAP} == vicmd ]] ||
         [[ $1 = 'block' ]]; then
@@ -42,22 +25,20 @@ elif [[ ${KEYMAP} == main ]] ||
 echo -ne '\e[5 q'
 fi
 }
-zle -N zle-keymap-select
 
+zle -N zle-keymap-select
 zle-line-init() {
-echo -ne "\e[5 q"
+    zle -K viins # initiate `vi insert` as keymap (can be removed if `bindkey -V` has been set elsewhere)
+    echo -ne "\e[5 q"
 }
 
 zle -N zle-line-init
-echo -ne '\e[5 q'       # use beam shape cursor on startup.
+echo -ne '\e[5 q' # Use beam shape cursor on startup.
+preexec() { echo -ne '\e[5 q' ;} # Use beam shape cursor for each new prompt.
 
-preexec() {
-    echo -ne '\e[5 q';  # use beam shape cursor for each new prompt.
-}
 
-#
-# change in quotation marks (the equivalent of Tim Popes' surround)
-#
+# CHANGING SURROUND:
+# --  ci' ci"  di` etc..
 autoload -U select-quoted
 zle -N select-quoted
 for m in visual viopp; do
@@ -66,9 +47,7 @@ for m in visual viopp; do
     done
 done
 
-#
-# change in brackets (the equivalent of Tim Popes' surround)
-#
+# -- ci(  ci{  di[ etc..
 autoload -U select-bracketed
 zle -N select-bracketed
 for m in visual viopp; do
@@ -76,3 +55,4 @@ for m in visual viopp; do
         bindkey -M $m $c select-bracketed
     done
 done
+

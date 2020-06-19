@@ -1,0 +1,30 @@
+#!/bin/zsh
+
+alias java11='export JAVA_HOME=$JAVA_11_HOME'
+
+
+# -- alias-function for sourcing dot files
+function src() {
+    # todo: refine function!
+    mv $HOME/.zshrc $HOME/.zshrc_old
+    cp $HOME/Repositories/dot-files/.zshrc  $HOME
+    source ~/.zshrc
+}
+#
+#
+# common aliases
+#
+alias rmd='rmd >/dev/null 2>&1'
+alias src='src'
+alias opn='opn'
+alias e='exit'
+alias c='clear'
+alias aliases="{ alias; git aliases; } | sort"
+alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
+
+#
+# exa aliases
+#
+alias ls='exa --git-ignore --group-directories-first -la'
+alias cl='clear; exa --git-ignore --group-directories-first -la'
+
