@@ -1,0 +1,49 @@
+#!/bin/zsh
+
+#
+# building main.tex
+#
+function builddoc() {
+    #
+    # updating citation list
+    #
+    cp ~/Dropbox/academic/mendeley/library.bib ./resources/
+
+
+    #
+    # building latex document with references
+    #
+    pdflatex main.tex > /dev/null
+    bibtex main > /dev/null
+    pdflatex main.tex > /dev/null
+    pdflatex main.tex > /dev/null
+}
+
+
+#
+# cleaning build dir
+#
+function lclean() {
+    rm -rf main.aux main.log main.bbl main.toc main.gz main.lof main.lot main.blg main.bcf main.xml main.out
+}
+
+
+#
+# run pdflatex
+#
+function ldbg() {
+    pdflatex main.tex
+}
+
+
+#
+# open generated main.pdf with safari
+#
+function lopen() {
+    open -a safari.app main.pdf
+}
+
+alias ldbg='ldbg'
+alias lopn='lopen'
+alias lcn='lclean'
+alias lbd='builddoc; lclean; lopen'

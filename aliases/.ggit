@@ -1,0 +1,155 @@
+#!/bin/zsh
+
+#
+# log, stash, & status
+#
+alias gl='git log'
+alias grl='git reflog'
+
+alias gsh='git stash'
+alias gs='git status'
+
+
+#
+# push, pull, & add
+#
+alias gpush='git push'
+alias gpull='git pull'
+alias ga='git add --patch $1'
+
+
+#
+# difference
+#
+alias gd='git diff'
+alias gdt='git difftool'
+alias gdh='git diff HEAD^ HEAD'
+
+
+#
+# amend, merge, & edit-conflicts
+#
+alias gca='git commit --amend'
+alias gmerge='git add --name-only --diff-filter=U'
+alias gresolve='vim $(git diff --name-only --diff-filter=U)' # Use :wnext in vim (write changes and move on to next file).
+
+
+#
+# sign commits
+#
+function gsign() {
+    git config commit.gpgsign true
+}
+
+
+#
+# git reflog
+#
+function grl() {
+    git reflog
+}
+
+
+#
+# git reset --hard
+#
+function grhh() {
+    head="$1"
+    git reset --hard HEAD~$head
+}
+
+
+#
+# git reset --soft
+#
+function grhs() {
+    head="$1"
+    git reset --soft HEAD~$head
+}
+
+
+#
+# git commit -m
+#
+function gcm() {
+    message="${@}"
+    git commit -m "$message"
+}
+
+
+#
+# git commit -am
+#
+function gcam() {
+    message="${@}"
+    git commit -am "$message"
+}
+
+
+#
+# git rebase -i
+#
+function gri() {
+    commits="$1"
+    git rebase -i HEAD~$commits
+}
+
+
+#
+# git status: all local repositories
+#
+function gs-all {
+    for dir in ~/Repositories/*
+    do
+        cd "$dir";
+        if [ -d .git ]; then
+            echo "\n\n--"
+            git rev-parse --show-toplevel
+            git status
+        else
+            git rev-parse --git-dir 2> /dev/null;
+            for dir in "$dir"/*
+            do
+                cd "$dir";
+                if [ -d .git ]; then
+                    echo "\n\n--"
+                    git rev-parse --show-toplevel
+                    git status
+                else
+                    git rev-parse --git-dir 2> /dev/null;
+                fi;
+            done
+        fi;
+    done
+    cd ~/Repositories/
+}
+
+
+#
+# git pull: on all local repositories
+#
+function gpull-all {
+    for dir in ~/Repositories/*
+    do
+        cd "$dir";
+        if [ -d .git ]; then
+            echo "\n\n--"
+            git rev-parse --show-toplevel
+            git pull
+        else
+            git rev-parse --git-dir 2> /dev/null;
+            for dir in "$dir"/*
+            do
+                cd "$dir";
+                if [ -d .git ]; then
+                    echo "\n\n--"
+                    git rev-parse --show-toplevel
+                    git pull
+                else
+                    git rev-parse --git-dir 2> /dev/null;
+                fi;
+            done
+        fi;
+    done
+    cd ~/Repositories/
+}

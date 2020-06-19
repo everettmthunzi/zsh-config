@@ -1,0 +1,6 @@
+#!/bin/zsh
+
+#
+# viewing markdown files
+#
+alias read='grip -b --quiet README.md'

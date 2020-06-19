@@ -1,8 +1,8 @@
 #!/bin/zsh
 
-#
-# sourcing .zshrc
-#
+export DOTFILE_CONFIG_PATH=$HOME/Repositories/dot-files/
+
+# -- alias-function for sourcing dot files
 function src() {
     # todo: refine function!
     mv $HOME/.zshrc $HOME/.zshrc_old
@@ -11,7 +11,7 @@ function src() {
 }
 
 #
-# reading *.md files locally
+# todo --- remove this !! reading *.md files locally
 #
 function rmd() {
     grip README.md --export
@@ -21,7 +21,7 @@ function rmd() {
 }
 
 #
-# opening *.pdf and *.md files
+# todo --- remove this !!!! opening *.pdf and *.md files
 #
 function opn() {
     FILE="$1"
@@ -62,11 +62,9 @@ alias cl='clear; exa --git-ignore --group-directories-first -la'
 #
 # git, vim, tmux, mutt, latex, and markdown specific aliases
 #
-source $HOME/Repositories/dot-files/git-config/.aliases
-source $HOME/Repositories/dot-files/mutt-config/.aliases
-source $HOME/Repositories/dot-files/vim-config/.aliases
-source $HOME/Repositories/dot-files/tmux-config/.aliases
-source $HOME/Repositories/dot-files/latex-config/.aliases
+source $HOME/Repositories/dot-files/mutt/.aliases
+source $HOME/Repositories/dot-files/vim/.aliases
+source $HOME/Repositories/dot-files/tmux/.aliases
 
 
 
