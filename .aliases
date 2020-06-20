@@ -1,14 +1,10 @@
 #!/bin/zsh
 
 
-# -- sourcing from the mutt and tmux submodules
-source $HOME/Repositories/dot-files/mutt/.aliases
-source $HOME/Repositories/dot-files/tmux/.aliases
-
-
-# -- sourcing from the zsh submodule
 source $HOME/Repositories/dot-files/zsh/aliases/.fzf
 source $HOME/Repositories/dot-files/zsh/aliases/.ggit
+source $HOME/Repositories/dot-files/zsh/aliases/.tmux
+source $HOME/Repositories/dot-files/zsh/aliases/.mutt
 source $HOME/Repositories/dot-files/zsh/aliases/.latex
 source $HOME/Repositories/dot-files/zsh/aliases/.markdown
 source $HOME/Repositories/dot-files/zsh/aliases/.arbitrary
