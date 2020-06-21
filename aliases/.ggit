@@ -1,155 +1,57 @@
 #!/bin/zsh
 
-#
-# log, stash, & status
-#
-alias gl='git log'
-alias grl='git reflog'
-
-alias gsh='git stash'
-alias gs='git status'
-
-
-#
-# push, pull, & add
-#
-alias gpush='git push'
-alias gpull='git pull'
-alias ga='git add --patch $1'
-
-
-#
-# difference
-#
-alias gd='git diff'
-alias gdt='git difftool'
-alias gdh='git diff HEAD^ HEAD'
-
-
-#
-# amend, merge, & edit-conflicts
-#
-alias gca='git commit --amend'
-alias gmerge='git add --name-only --diff-filter=U'
-alias gresolve='vim $(git diff --name-only --diff-filter=U)' # Use :wnext in vim (write changes and move on to next file).
-
-
-#
-# sign commits
-#
-function gsign() {
-    git config commit.gpgsign true
+# ALIAS FUNCTIONS
+function smart_diff () {
+    if git diff-index --quiet HEAD --; then
+        git diff HEAD^ HEAD # if changes have been added, diff heads
+    else
+        git diff # if changes have not been added, use normal diff
+    fi
 }
 
-
-#
-# git reflog
-#
-function grl() {
-    git reflog
-}
+# -- viewing repository status
+alias ggS='git status'
 
 
-#
-# git reset --hard
-#
-function grhh() {
-    head="$1"
-    git reset --hard HEAD~$head
-}
+# -- resetting
+alias ggrH!='git reset --hard'
+alias ggrS='git reset --soft'
 
 
-#
-# git reset --soft
-#
-function grhs() {
-    head="$1"
-    git reset --soft HEAD~$head
-}
+# -- viewing logs
+alias ggl='git log'
+alias ggrl='git reflog'
+alias ggv='git log --pretty="format:%h %G? %aN  %s"' # verify commits are signed n.b. G=signed | N=not signed
 
 
-#
-# git commit -m
-#
-function gcm() {
-    message="${@}"
-    git commit -m "$message"
-}
+# -- pulling
+alias ggpull='git pull'
 
 
-#
-# git commit -am
-#
-function gcam() {
-    message="${@}"
-    git commit -am "$message"
-}
+# -- pushing
+alias ggpush='git push'
 
 
-#
-# git rebase -i
-#
-function gri() {
-    commits="$1"
-    git rebase -i HEAD~$commits
-}
+# # -- stashing
+alias ggst='git stash'
 
 
-#
-# git status: all local repositories
-#
-function gs-all {
-    for dir in ~/Repositories/*
-    do
-        cd "$dir";
-        if [ -d .git ]; then
-            echo "\n\n--"
-            git rev-parse --show-toplevel
-            git status
-        else
-            git rev-parse --git-dir 2> /dev/null;
-            for dir in "$dir"/*
-            do
-                cd "$dir";
-                if [ -d .git ]; then
-                    echo "\n\n--"
-                    git rev-parse --show-toplevel
-                    git status
-                else
-                    git rev-parse --git-dir 2> /dev/null;
-                fi;
-            done
-        fi;
-    done
-    cd ~/Repositories/
-}
+# -- adding
+alias gga='git add --patch $1'
 
 
-#
-# git pull: on all local repositories
-#
-function gpull-all {
-    for dir in ~/Repositories/*
-    do
-        cd "$dir";
-        if [ -d .git ]; then
-            echo "\n\n--"
-            git rev-parse --show-toplevel
-            git pull
-        else
-            git rev-parse --git-dir 2> /dev/null;
-            for dir in "$dir"/*
-            do
-                cd "$dir";
-                if [ -d .git ]; then
-                    echo "\n\n--"
-                    git rev-parse --show-toplevel
-                    git pull
-                else
-                    git rev-parse --git-dir 2> /dev/null;
-                fi;
-            done
-        fi;
-    done
-    cd ~/Repositories/
-}
+# -- checking what changed/difference
+alias ggd='smart_diff'
+alias ggdt='git difftool'
+
+
+# -- re-basing
+alias ggR='git rebase -i'
+
+
+
+# # amend, merge, & edit-conflicts
+# alias gca='git commit --amend'
+# alias gmerge='git add --name-only --diff-filter=U'
+# alias gresolve='vim $(git diff --name-only --diff-filter=U)' # Use :wnext in vim (write changes and move on to next file).
+
