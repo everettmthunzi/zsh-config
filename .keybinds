@@ -15,16 +15,24 @@ bindkey '^e' edit-command-line
 
 # -- using ' for launching fzf
 function fzf-launch () {
-vim $(fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :100 {}');
+    file=$(fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :100 {}');
+
+    if [ -z ${file} ]; then
+        # if no file is selected, do nothing
+        echo ""
+    else
+        # if a file is selected, open with vim
+        vim $file
+    fi
 }
 bindkey -s "\'" 'fzf-launch\n'
 
 
 # -- using / to open a directory with fzf
 function fzf-openDir () {
-local file
-local dir
-file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+    local file
+    local dir
+    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
 bindkey -s "\?" 'fzf-openDir\n'
 
