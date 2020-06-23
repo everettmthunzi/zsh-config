@@ -12,3 +12,25 @@ bindkey -M menuselect 'j' vi-down-line-or-history
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
+
+# -- using ' for launching fzf
+function fzf-launch () {
+vim $(fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :100 {}');
+}
+bindkey -s "\'" 'fzf-launch\n'
+
+
+# -- using / to open a directory with fzf
+function fzf-openDir () {
+local file
+local dir
+file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+}
+bindkey -s "\?" 'fzf-openDir\n'
+
+
+# -- using ; to launch vim
+function vim-launch () { vim; }
+bindkey -s "\;" 'vim-launch\n'
+
+

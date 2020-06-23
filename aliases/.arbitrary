@@ -1,8 +1,22 @@
 #!/bin/zsh
 
-# ALIAS FUNCTIONS:
+DOTFILE_PATH=$HOME/Repositories/dotfiles/
+
+DOTFILES=(
+.zshrc
+.vimrc
+.muttrc
+.tmux.conf
+)
+
+
 function src() {
-    $HOME/Repositories/dotfiles./install
+    cd $HOME
+    rm -rf ${DOTFILES[@]}
+    cd $DOTFILE_PATH
+    cp ${DOTFILES[@]} $HOME
+    source "$HOME/.zshrc"
+    printf ' %.s-- sourcing dot files - done \n'
 }
 
 
