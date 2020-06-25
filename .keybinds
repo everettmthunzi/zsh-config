@@ -15,7 +15,7 @@ bindkey '^e' edit-command-line
 
 # -- using ' for launching fzf
 function fzf-launch () {
-    file=$(fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :100 {}');
+    file=$(fzf --height 25  --layout reverse --preview 'bat --style=numbers --color=always --line-range :100 {}');
 
     if [ -z ${file} ]; then
         # if no file is selected, do nothing
@@ -34,11 +34,15 @@ function fzf-openDir () {
     local dir
     file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
-bindkey -s "\?" 'fzf-openDir\n'
+bindkey -s "" 'fzf-openDir\n'
 
 
 # -- using ; to launch vim
 function vim-launch () { vim; }
 bindkey -s "\;" 'vim-launch\n'
 
+
+# -- using Q to exit the terminal
+function quick-exit () { exit; }
+bindkey -s "Q" 'quick-exit\n'
 

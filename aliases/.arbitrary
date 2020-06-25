@@ -24,10 +24,6 @@ function src() {
 alias src='src'
 
 
-# -- exiting terminal
-alias Q='exit'
-
-
 # -- viewing all aliases
 alias aliases="{ alias; git aliases; } | sort"
 

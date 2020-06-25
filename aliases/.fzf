@@ -10,18 +10,6 @@ function fda() {
   dir=$(find ${1:-.} -type d 2> /dev/null | fzf +m) && cd "$dir"
 }
 
-#
-# cd into the directory of the selected file
-#
-function cdf() {
-   local file
-   local dir
-   file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
-}
-
-#
-# fuzzy cd from anywhere
-#
 function cf() {
   local file
 
