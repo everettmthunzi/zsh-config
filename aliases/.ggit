@@ -5,10 +5,10 @@ function smart_diff () {
     if git diff-index --quiet HEAD --; then
         git diff HEAD^ HEAD # if changes have been committed
     else
-        if git diff --exit-code; then
-            git diff --cache # if changes have been introduced & staged (but not committed)
-        else
+        if  git diff --cached --exit-code ; then
             git diff # if changes been introduced but not staged
+        else
+            git diff --cached # if changes have been introduced & staged (but not committed)
         fi
     fi
 }
