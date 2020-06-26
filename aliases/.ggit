@@ -9,6 +9,28 @@ function smart_diff () {
     fi
 }
 
+
+function pull () {
+    if [[ $(git submodule foreach 'git status') ]]; then
+        echo " -- found submodules!"
+        echo " -- switching to recursive pull strategy"
+        git submodule update --remote
+        git pull --recurse-submodules
+    else
+        git pull
+    fi
+}
+
+
+function push () {
+    if [[ $(git submodule foreach 'git status') ]]; then
+        echo " -- todo implement safety check to protect submodules!"
+    else
+        git push
+    fi
+}
+
+
 # -- viewing repository status
 alias ggS='git status'
 
@@ -24,7 +46,7 @@ alias ggC='git commit -m'
 
 # -- resetting
 alias ggrH!='git reset --hard'
-alias ggrS='git reset --soft'
+alias ggrS!='git reset --soft'
 
 
 # -- viewing logs
@@ -34,7 +56,7 @@ alias ggv='git log --pretty="format:%h %G? %aN  %s"' # verify commits are signed
 
 
 # -- pulling
-alias ggpull='git pull'
+alias ggpull='pull'
 
 
 # -- pushing
