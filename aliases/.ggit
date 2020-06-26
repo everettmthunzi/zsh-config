@@ -3,9 +3,13 @@
 # ALIAS FUNCTIONS
 function smart_diff () {
     if git diff-index --quiet HEAD --; then
-        git diff HEAD^ HEAD # if changes have been added, diff heads
+        git diff HEAD^ HEAD # if changes have been committed
     else
-        git diff # if changes have not been added, use normal diff
+        if git diff --exit-code; then
+            git diff --cache # if changes have been introduced & staged (but not committed)
+        else
+            git diff # if changes been introduced but not staged
+        fi
     fi
 }
 
@@ -74,6 +78,17 @@ alias ggdt='git difftool'
 
 # -- re-basing
 alias ggR='git rebase'
+
+
+# -- un-staging files
+alias ggcS='git restore --staged'
+
+
+# -- deleting new changes (not yet staged)
+alias ggc='git restore'
+
+
+
 
 
 
