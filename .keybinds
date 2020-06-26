@@ -14,35 +14,47 @@ bindkey '^e' edit-command-line
 
 
 # -- using ' for launching fzf
-function fzf-launch () {
-    file=$(fzf --height 25  --layout reverse --preview 'bat --style=numbers --color=always --line-range :100 {}');
+function ffind-file () {
+file=$(find $HOME/Repositories -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :100 {}')
 
-    if [ -z ${file} ]; then
-        # if no file is selected, do nothing
-        echo ""
-    else
-        # if a file is selected, open with vim
-        vim $file
-    fi
+if [ -z ${file} ]; then
+    # if no file is selected, do nothing
+    echo ""
+else
+    # if a file is selected, open with vim
+    vim $file
+fi
 }
-bindkey -s "\'" 'fzf-launch\n'
+bindkey -s "\[" 'ffind-file\n'
 
 
-# -- using / to open a directory with fzf
-function fzf-openDir () {
-    local file
-    local dir
-    file=$(fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+
+# -- using " to open a directory with fzf
+function ffind-dir () {
+local file
+local dir
+file=$(find $HOME/Repositories -type f | fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
 }
-bindkey -s "" 'fzf-openDir\n'
+bindkey -s "\]" "ffind-dir\n"
+
 
 
 # -- using ; to launch vim
 function vim-launch () { vim; }
-bindkey -s "\;" 'vim-launch\n'
+bindkey -s "\\" 'vim-launch\n'
 
 
 # -- using Q to exit the terminal
-function quick-exit () { exit; }
-bindkey -s "Q" 'quick-exit\n'
+function quick-exit () {
+exit
+zle accept-line
+}
+zle -N quick-exit # define widget from function
 
+bindkey -M viins 'Q' quick-exit # bind widget to key in viins mode
+bindkey -M vicmd 'Q' quick-exit # bind widget to Ctrl+X in vicmd mode
+
+
+
+
+#bindkey -s "Q" 'quick-exit\n'
