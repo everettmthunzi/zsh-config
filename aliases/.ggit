@@ -85,7 +85,7 @@ alias ggpull='submodule-pull'
 
 
 # -- pushing
-alias ggpush='git submodule-safe-push'
+alias ggpush='submodule-safe-push'
 
 
 # # -- stashing
