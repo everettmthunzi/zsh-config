@@ -11,12 +11,7 @@ DOTFILES=(
 
 
 function src() {
-    cd $HOME
-    rm -rf ${DOTFILES[@]}
-    cd $DOTFILE_PATH
-    cp ${DOTFILES[@]} $HOME
     source "$HOME/.zshrc"
-    printf ' %.s-- sourcing dot files - done \n'
 }
 
 
