@@ -1,39 +1,59 @@
 #!/bin/zsh
 
-# ALIAS FUNCTIONS
-function smart_diff () {
-    if git diff-index --quiet HEAD --; then
-        git diff HEAD^ HEAD # if changes have been committed
+
+# one diff to rule them all!
+function smart-diff () {
+# if changes have been committed
+if git diff-index --quiet HEAD --; then
+    git diff HEAD^ HEAD
+else
+    # if changes been introduced but not staged
+    if  git diff --cached --exit-code ; then
+        git diff
     else
-        if  git diff --cached --exit-code ; then
-            git diff # if changes been introduced but not staged
-        else
-            git diff --cached # if changes have been introduced & staged (but not committed)
-        fi
+        # if changes have been introduced & staged (but not committed yet)
+        git diff --cached
     fi
+fi
 }
 
 
-function pull () {
-    if [[ $(git submodule foreach 'git status') ]]; then
-        echo " -- found submodules!"
-        echo " -- switching to recursive pull strategy"
-        git submodule update --remote
-        git pull --recurse-submodules
-    else
-        git pull
-    fi
+# -- one pull to rule them all!
+function submodule-pull () {
+if [[ $(git submodule foreach 'git status') ]]; then
+    echo " -- found submodules!"
+    echo " -- switching to recursive submodule-pull strategy"
+    git submodule update --remote
+    git pull --recurse-submodules
+else
+    git pull
+fi
 }
 
 
-function push () {
-    if [[ $(git submodule foreach 'git status') ]]; then
-        echo " -- todo implement safety check to protect submodules!"
-    else
-        git push
-    fi
+# -- safe checking against dirty commits
+function submodule-safe-push () {
+if [[ $(git submodule foreach 'git status') ]]; then
+    echo " -- todo implement safety check to protect submodules!"
+else
+    git push
+fi
 }
 
+
+
+# -- safe moving in git repositories (because I never seem to remember git mv)
+function forget-git-move-not () {
+if [ git rev-parse --is-inside-work-tree ]; then
+    git mv $1
+else
+    mv $1
+fi;
+}
+
+
+# -- working with forgetful moving in git repositories
+alias mv='forget-git-move-not'
 
 # -- viewing repository status
 alias ggS='git status'
@@ -56,15 +76,16 @@ alias ggrS!='git reset --soft'
 # -- viewing logs
 alias ggl='git log'
 alias ggrl='git reflog'
-alias ggv='git log --pretty="format:%h %G? %aN  %s"' # verify commits are signed n.b. G=signed | N=not signed
+# --verifying commits are signed: G=signed | N=not signed
+alias ggv='git log --pretty="format:%h %G? %aN  %s"'
 
 
-# -- pulling
-alias ggpull='pull'
+# -- submodule-pulling
+alias ggpull='submodule-pull'
 
 
 # -- pushing
-alias ggpush='git push'
+alias ggpush='git submodule-safe-push'
 
 
 # # -- stashing
@@ -72,7 +93,7 @@ alias ggst='git stash'
 
 
 # -- checking what changed/difference
-alias ggd='smart_diff'
+alias ggd='smart-diff'
 alias ggdt='git difftool'
 
 
@@ -86,10 +107,6 @@ alias ggcS='git restore --staged'
 
 # -- deleting new changes (not yet staged)
 alias ggc='git restore'
-
-
-
-
 
 
 # # amend, merge, & edit-conflicts
