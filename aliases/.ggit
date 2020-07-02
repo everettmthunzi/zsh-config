@@ -56,7 +56,7 @@ fi
 # alias mv='forget-git-move-not'
 
 # -- viewing repository status
-alias ggS='git status'
+alias ggs='git status'
 
 
 # -- adding cache
@@ -65,7 +65,7 @@ alias gga='git add --patch $1'
 
 
 # -- viewing repository status
-alias ggC='git commit -m'
+alias ggc='git commit -m'
 
 
 # -- resetting
@@ -98,15 +98,15 @@ alias ggdt='git difftool'
 
 
 # -- re-basing
-alias ggR='git rebase'
+alias ggR!='git rebase -i'
 
 
 # -- un-staging files
-alias ggcS='git restore --staged'
+alias ggrS='git restore --staged'
 
 
 # -- deleting new changes (not yet staged)
-alias ggc='git restore'
+alias ggr='git restore'
 
 
 # # amend, merge, & edit-conflicts
