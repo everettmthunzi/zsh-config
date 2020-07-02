@@ -51,3 +51,10 @@ alias fif='fif'
 alias go='cf'
 alias go2d='fda'
 alias go2f='cdf'
+
+# -- ] to open a directory by pointing to a file with fzf
+function ffind-dir () {
+local file
+local dir
+file=$(find $HOME/Repositories -type f | fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+}

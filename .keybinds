@@ -1,25 +1,26 @@
 #!/bin/zsh
 
 
-# -- using vim-like keys binds
+# -- vim-like keys binds
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
 
-# -- using CTRL-E for abrupt terminal-vim editing
+# -- CTRL-E for abrupt terminal-vim editing
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
 
-# -- using ' for launching fzf
+SEARCH_DIR=$HOME/Repositories
+
+# -- [ for launching fzf
 function ffind-file () {
-file=$(find $HOME/Repositories -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :100 {}')
+file=$(find $SEARCH_DIR -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :100 {}')
 
 if [ -z ${file} ]; then
     # if no file is selected, do nothing
-    echo ""
 else
     # if a file is selected, open with vim
     vim $file
@@ -29,11 +30,10 @@ bindkey -s "\[" 'ffind-file\n'
 
 
 
-# -- using " to open a directory with fzf
+# -- ] to open a directory with fzf
 function ffind-dir () {
-local file
-local dir
-file=$(find $HOME/Repositories -type f | fzf +m -q "$1") && dir=$(dirname "$file") && cd "$dir"
+  local dir
+  dir=$(find ${1:-$HOME} -type d 2> /dev/null | fzf +m) && cd "$dir"
 }
 bindkey -s "\]" "ffind-dir\n"
 
