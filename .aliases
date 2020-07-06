@@ -1,6 +1,5 @@
 #!/bin/zsh
 
-source $HOME/Repositories/dotfiles/zsh/aliases/.fzf
 source $HOME/Repositories/dotfiles/zsh/aliases/.ggit
 source $HOME/Repositories/dotfiles/zsh/aliases/.tmux
 source $HOME/Repositories/dotfiles/zsh/aliases/.mutt

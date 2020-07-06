@@ -15,7 +15,8 @@ bindkey '^e' edit-command-line
 
 SEARCH_DIR=$HOME/Repositories
 
-# -- [ for launching fzf
+# https://github.com/junegunn/fzf/wiki/examples#changing-directory
+# -- using ([) for finding and opening a file (fzf + vim)
 function ffind-file () {
 file=$(find $SEARCH_DIR -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :100 {}')
 
@@ -29,14 +30,20 @@ fi
 bindkey -s "\[" 'ffind-file\n'
 
 
-
-# -- ] to open a directory with fzf
+# -- using (]) to open a directory using fzf
 function ffind-dir () {
-  local dir
-  dir=$(find ${1:-$HOME} -type d 2> /dev/null | fzf +m) && cd "$dir"
+local dir
+dir=$(find ${1:-$HOME} -type d 2> /dev/null | fzf +m) && cd "$dir"
 }
 bindkey -s "\]" "ffind-dir\n"
 
+
+# -- using (*) to grep a string pattern in a directory using fzf
+function fif () {
+    if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
+    rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
+}
+bindkey -s "\*" "fif"
 
 
 # -- using ; to launch vim
@@ -54,7 +61,3 @@ zle -N quick-exit # define widget from function
 bindkey -M viins 'Q' quick-exit # bind widget to key in viins mode
 bindkey -M vicmd 'Q' quick-exit # bind widget to Ctrl+X in vicmd mode
 
-
-
-
-#bindkey -s "Q" 'quick-exit\n'
