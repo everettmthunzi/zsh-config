@@ -48,9 +48,9 @@ function fh() {
 
 alias fh='fh'
 alias fif='fif'
-alias go='cf'
-alias go2d='fda'
-alias go2f='cdf'
+#alias go='cf'
+#alias go2d='fda'
+#alias go2f='cdf'
 
 # -- ] to open a directory by pointing to a file with fzf
 function ffind-dir () {
