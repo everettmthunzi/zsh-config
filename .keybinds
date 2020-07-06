@@ -48,7 +48,7 @@ bindkey -s "\*" "fif"
 
 # -- using ; to launch vim
 function vim-launch () { vim; }
-bindkey -s "\\" 'vim-launch\n'
+#bindkey -s "\\" 'vim-launch\n'
 
 
 # -- using Q to exit the terminal
@@ -61,3 +61,5 @@ zle -N quick-exit # define widget from function
 bindkey -M viins 'Q' quick-exit # bind widget to key in viins mode
 bindkey -M vicmd 'Q' quick-exit # bind widget to Ctrl+X in vicmd mode
 
+bindkey -M viins 'q' quick-exit # bind widget to key in viins mode
+bindkey -M vicmd 'q' quick-exit # bind widget to Ctrl+X in vicmd mode
