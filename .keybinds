@@ -1,4 +1,8 @@
 #!/bin/zsh
+#
+# USING ZSH WIDGETS FOR KEY BINDING
+REPOSITORIES=$HOME/Repositories
+
 
 
 # -- vim-like keys binds
@@ -8,61 +12,97 @@ bindkey -M menuselect 'l' vi-forward-char
 bindkey -M menuselect 'j' vi-down-line-or-history
 
 
-# -- CTRL-E for abrupt terminal-vim editing
+
+# CTRL-E >> terminal-vim editing
 autoload edit-command-line; zle -N edit-command-line
 bindkey '^e' edit-command-line
 
 
-SEARCH_DIR=$HOME/Repositories
 
-# https://github.com/junegunn/fzf/wiki/examples#changing-directory
-# -- using ([) for finding and opening a file (fzf + vim)
+# ([) >> fzf find + vim-open
 function ffind-file () {
-file=$(find $SEARCH_DIR -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :100 {}')
+    file=$(find $REPOSITORIES -type f | fzf --height 25  --preview 'bat --style=numbers --color=always --line-range :20 {}')
 
-if [ -z ${file} ]; then
-    # if no file is selected, do nothing
-else
-    # if a file is selected, open with vim
-    vim $file
-fi
+    if [ -z ${file} ]; then
+            # do nothing on escape/no file selected!
+    else
+        vim $file  </dev/tty # tell vim input is from terminal
+    fi
+    zle accept-line
 }
-bindkey -s "\[" 'ffind-file\n'
+zle -N ffind-file # define widget (from function)
+bindkey -M viins "\[" ffind-file # in vim ins mode
+bindkey -M vicmd "\[" ffind-file # in vim cmd mode
 
 
-# -- using (]) to open a directory using fzf
+
+# (]) >> fzf dir find + open
 function ffind-dir () {
-local dir
-dir=$(find ${1:-$HOME} -type d 2> /dev/null | fzf +m) && cd "$dir"
+    local dir
+    dir=$(find ${1:-$HOME} -type d 2> /dev/null | fzf +m) && cd "$dir"
+    zle accept-line
 }
-bindkey -s "\]" "ffind-dir\n"
+zle -N ffind-dir # define widget (from function)
+bindkey -M viins "\]" ffind-dir # in vim ins mode
+bindkey -M vicmd "\]" ffind-dir # in vim cmd mode
 
 
-# -- using (*) to grep a string pattern in a directory using fzf
+
+# (*) >> fzf grep in a directory
 function fif () {
     if [ ! "$#" -gt 0 ]; then echo "Need a string to search for!"; return 1; fi
     rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
 }
-zle -N fif # define widget from function
-#bindkey -s "\*" "fif"
-bindkey -M vicmd '\*' fif # bind widget to Ctrl+X in vicmd mode
+zle -N fif # define widget (from function)
+bindkey -M vicmd "\*" fif # in vim cmd mode
 
 
-# -- using ; to launch vim
-function vim-launch () { vim; }
-#bindkey -s "\\" 'vim-launch\n'
 
-
-# -- using Q to exit the terminal
+# -- (q) >> exit terminal
 function quick-exit () {
-exit
-zle accept-line
+    exit
+    zle accept-line
 }
-zle -N quick-exit # define widget from function
+zle -N quick-exit # define widget (from function)
+bindkey -M vicmd 'q' quick-exit # in vim cmd mode
 
-# bindkey -M viins 'Q' quick-exit # bind widget to key in viins mode
-bindkey -M vicmd 'Q' quick-exit # bind widget to Ctrl+X in vicmd mode
 
-# bindkey -M viins 'q' quick-exit # bind widget to key in viins mode
-bindkey -M vicmd 'q' quick-exit # bind widget to Ctrl+X in vicmd mode
+
+# -- (`) >> source .zshrc
+BACKUP_DIR=$HOME/old
+DOTFILES_TARGET_DIR=$HOME/
+DOTFILES_SOURCE_DIR=$HOME/Repositories/dotfiles/
+DOTFILES=$HOME/Repositories/dotfiles/dotfiles.txt
+
+function backup-dotfiles () {
+    # cat file-list.txt | xargs -n1 -I {} mv source/{} target/
+    cat $DOTFILES | xargs -n1 -I {} mv $DOTFILES_TARGET_DIR{} $BACKUP_DIR
+
+    if [ "$?" -eq "0" ]; then
+        printf '\n %.s-- current dotfiles backed up in <old/> \n'
+    else
+        printf '\n %.s-- backing up current dotfiles failed!\n'
+    fi
+}
+
+function update-dotfiles () {
+    cat $DOTFILES | xargs -n1 -I {} cp -R $DOTFILES_SOURCE_DIR{} $DOTFILES_TARGET_DIR
+
+    if [ "$?" -eq "0" ]; then
+        printf ' %.s-- dotfiles update successful!\n'
+    else
+        printf ' %.s-- dotfiles update failed!\n'
+    fi
+}
+
+function quick-source () {
+    if [ -d $BACKUP_DIR ]; then sudo rm -Rf $BACKUP_DIR; fi # todo: introduce [Y/N]
+
+    mkdir $BACKUP_DIR && backup-dotfiles
+    update-dotfiles && source $HOME/.zshrc &>/dev/null
+    zle accept-line
+}
+zle -N quick-source # define widget (from function)
+bindkey -M viins "\`" quick-source # in vim ins mode
+bindkey -M vicmd "\`" quick-source # in vim cmd mode
 

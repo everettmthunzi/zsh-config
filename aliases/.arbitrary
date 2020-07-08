@@ -1,31 +1,11 @@
 #!/bin/zsh
 
-DOTFILE_PATH=$HOME/Repositories/dotfiles
-
-DOTFILES=(
-.zshrc
-.vimrc
-.muttrc
-.tmux.conf
-)
-
-
-function src() {
-    cp $DOTFILE_PATH/${DOTFILES[@]} $HOME
-    source "$HOME/.zshrc"
-}
-
-
-# -- sourcing
-alias src='src'
-
-
 # -- viewing all aliases
 alias aliases="{ alias; git aliases; } | sort"
 
 
 # -- exporting older versions of java
-alias java11='export JAVA_HOME=$JAVA_11_HOME'
+# alias java11='export JAVA_HOME=$JAVA_11_HOME'
 
 
 # -- listing current working directory

@@ -1,67 +1,75 @@
 #!/bin/zsh
 
 
-# one diff to rule them all!
+# -- checking relative difference
 function smart-diff () {
-# if changes have been committed
-if git diff-index --quiet HEAD --; then
-    git diff HEAD^ HEAD
-else
-    # if changes been introduced but not staged
-    if  git diff --cached --exit-code ; then
-        git diff
+    # if changes already committed
+    if git diff-index --quiet HEAD --; then
+        git diff HEAD^ HEAD
     else
-        # if changes have been introduced & staged (but not committed yet)
-        git diff --cached
+        # if changes made (but not staged)
+        if  git diff --cached --exit-code ; then
+            git diff
+        else
+            # if changes staged (but not committed)
+            git diff --cached
+        fi
     fi
-fi
 }
 
 
-# -- one pull to rule them all!
+# -- safe-pulling submodules
 function submodule-pull () {
-if [[ $(git submodule foreach 'git status') ]]; then
-    echo " -- found submodules!"
-    echo " -- switching to recursive submodule-pull strategy"
-    git submodule update --remote
-    git pull --recurse-submodules
-else
-    git pull
-fi
+    if [[ $(git submodule foreach 'git status') ]]; then
+        echo " -- found submodules!"
+        echo " -- switching to recursive submodule-pull strategy"
+        git submodule update --remote
+        git pull --recurse-submodules
+    else
+        git pull
+    fi
 }
 
 
-# -- safe checking against dirty commits
+# -- safe-pushing with submodules
 function submodule-safe-push () {
-if [[ $(git submodule foreach 'git status') ]]; then
-    echo " -- todo implement safety check to protect submodules!"
-else
-    git push
-fi
+    if [[ $(git submodule foreach 'git status') ]]; then
+        echo " -- todo implement safety check to protect submodules!"
+    else
+        git push
+    fi
 }
 
 
-
-# -- safe moving in git repositories (because I never seem to remember git mv)
-# function forget-git-move-not () {
-# if [ git rev-parse --is-inside-work-tree ]; then
-#     git mv $1 $2
-# else
-#     mv $1 $2
-# fi;
-# }
+# -- discarding relative changes
+function discard-changes () {
+    git restore $1
+}
 
 
-# -- working with forgetful moving in git repositories
-# alias mv='forget-git-move-not'
+# -- discarding relative changes
+alias ggdisc!='discard-changes'
+
+
+# -- checking out
+alias ggco='git checkout'
+
+
+# -- moving files
+alias ggm='git mv'
+
+
+# -- viewing repository size
+alias ggsize='git count-objects -vH'
+
 
 # -- viewing repository status
 alias ggs='git status'
 
 
 # -- adding cache
-alias ggA='git add .'
-alias gga='git add --patch $1'
+alias gga='git add .'
+alias gga!='git add --patch $1'
 
 
 # -- viewing repository status
@@ -76,6 +84,8 @@ alias ggrS!='git reset --soft'
 # -- viewing logs
 alias ggl='git log'
 alias ggrl='git reflog'
+
+
 # --verifying commits are signed: G=signed | N=not signed
 alias ggv='git log --pretty="format:%h %G? %aN  %s"'
 
