@@ -7,6 +7,12 @@ alias aliases="{ alias; git aliases; } | sort"
 # -- exporting older versions of java
 # alias java11='export JAVA_HOME=$JAVA_11_HOME'
 
+# -- fd (not called fd) in Debian-based Linux distributions
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    echo "guilty as charged!!"
+    alias fd=fdfind
+fi
+
 
 # -- listing current working directory
 alias clr='clear'
