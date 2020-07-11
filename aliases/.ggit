@@ -47,6 +47,16 @@ function greater-git-rm-submodule() {
 	git rm -f $1
 }
 
+# -- renaming a submodule
+function greater-git-rename-submodule() {
+	git submodule deinit -f -- $1
+	rm -rf .git/modules/$1
+	git rm -f $1
+git submodule add $2
+}
+# -- renaming a submodule
+alias ggmvsub='greater-git-rename-submodule'
+
 # -- undoing local changes
 function greater-git-undo() {
 	# -- un-staging files ??? repeat ???
@@ -66,8 +76,18 @@ function greater-git-remove() {
 # -- removing files
 alias gg!='greater-git-remove'
 
-# -- removing a submodule
-alias gg!sub='greater-git-rm-submodule'
+# -- adding remote
+alias gg+ro='git remote add origin'
+
+# -- pushing after adding an origin
+alias ggpush!='git push -u --force origin master'
+
+# -- cloning
+alias gg+='git clone'
+
+# -- adding and removing a submodules
+alias gg+sub='git submodule add'
+alias gg-sub='greater-git-rm-submodule'
 
 # -- removing changes
 alias gg!changes='greater-git-undo'
@@ -118,3 +138,5 @@ alias ggdt='git difftool'
 # -- re-basing
 alias ggrebase='git rebase -i'
 
+# -- tracked files
+alias ggtracked='git ls-tree -r master --name-only'
