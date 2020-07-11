@@ -1,126 +1,116 @@
 #!/bin/zsh
 
+# -- gg = greater git
+# -- All unsafe/remove operations commence with gg! (read as great git remove)
 
 # -- checking relative difference
-function smart-diff () {
-    # if changes already committed
-    if git diff-index --quiet HEAD --; then
-        git diff HEAD^ HEAD
-    else
-        # if changes made (but not staged)
-        if  git diff --cached --exit-code ; then
-            git diff
-        else
-            # if changes staged (but not committed)
-            git diff --cached
-        fi
-    fi
+function smart-diff() {
+	# if changes already committed
+	if git diff-index --quiet HEAD --; then
+		git diff HEAD^ HEAD
+	else
+		# if changes made (but not staged)
+		if git diff --cached --exit-code; then
+			git diff
+		else
+			# if changes staged (but not committed)
+			git diff --cached
+		fi
+	fi
 }
-
 
 # -- safe-pulling submodules
-function submodule-pull () {
-    if [[ $(git submodule foreach 'git status') ]]; then
-        echo " -- found submodules!"
-        echo " -- switching to recursive submodule-pull strategy"
-        git submodule update --remote
-        git pull --recurse-submodules
-    else
-        git pull
-    fi
+function submodule-pull() {
+	if [[ $(git submodule foreach 'git status') ]]; then
+		echo " -- found submodules!"
+		echo " -- switching to recursive submodule-pull strategy"
+		git submodule update --remote
+		git pull --recurse-submodules
+	else
+		git pull
+	fi
 }
-
 
 # -- safe-pushing with submodules
-function submodule-safe-push () {
-    if [[ $(git submodule foreach 'git status') ]]; then
-        echo " -- todo implement safety check to protect submodules!"
-    else
-        git push
-    fi
+function submodule-safe-push() {
+	if [[ $(git submodule foreach 'git status') ]]; then
+		echo " -- todo implement safety check to protect submodules!"
+	else
+		git push
+	fi
 }
 
-
-# -- discarding relative changes
-function discard-changes () {
-    git restore $1
+# -- removing a submodule
+function rm-submodule() {
+	git submodule deinit -f -- $1
+	rm -rf .git/modules/$1
+	git rm -f $1
 }
 
-
 # -- discarding relative changes
-alias ggdisc!='discard-changes'
+function discard-changes() {
+	git restore $1
+}
 
+# -- removing a submodule
+alias gg!sub='rm-submodule'
+
+# -- removing changes
+alias gg!='discard-changes'
 
 # -- checking out
 alias ggco='git checkout'
 
-
 # -- moving files
 alias ggm='git mv'
-
 
 # -- viewing repository size
 alias ggsize='git count-objects -vH'
 
-
 # -- viewing repository status
 alias ggs='git status'
 
-
 # -- adding cache
 alias gga='git add .'
-alias gga!='git add --patch $1'
-
+alias ggaP='git add --patch $1'
 
 # -- viewing repository status
 alias ggc='git commit -m'
 
-
 # -- resetting
-alias ggrH!='git reset --hard'
-alias ggrS!='git reset --soft'
-
+alias gg!h='git reset --hard'
+alias gg!s='git reset --soft'
 
 # -- viewing logs
 alias ggl='git log'
 alias ggrl='git reflog'
 
-
 # --verifying commits are signed: G=signed | N=not signed
 alias ggv='git log --pretty="format:%h %G? %aN  %s"'
-
 
 # -- submodule-pulling
 alias ggpull='submodule-pull'
 
-
 # -- pushing
 alias ggpush='submodule-safe-push'
 
-
 # # -- stashing
 alias ggst='git stash'
-
 
 # -- checking what changed/difference
 alias ggd='smart-diff'
 alias ggdt='git difftool'
 
-
 # -- re-basing
-alias ggR!='git rebase -i'
+alias ggR='git rebase -i'
 
-
-# -- un-staging files
+# -- un-staging files ??? repeat ???
 alias ggrS='git restore --staged'
-
 
 # -- deleting new changes (not yet staged)
 alias ggr='git restore'
-
 
 # # amend, merge, & edit-conflicts
 # alias gca='git commit --amend'
 # alias gmerge='git add --name-only --diff-filter=U'
 # alias gresolve='vim $(git diff --name-only --diff-filter=U)' # Use :wnext in vim (write changes and move on to next file).
-
