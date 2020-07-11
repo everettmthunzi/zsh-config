@@ -3,23 +3,19 @@
 # -- viewing all aliases
 alias aliases="{ alias; git aliases; } | sort"
 
-
 # -- exporting older versions of java
 # alias java11='export JAVA_HOME=$JAVA_11_HOME'
 
-# -- fd (not called fd) in Debian-based Linux distributions
+# -- fd = fdfind in Debian-based Linux distributions
+# -- safely using fd cross platform
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    echo "guilty as charged!!"
-    alias fd=fdfind
+	alias fd=fdfind
 fi
-
 
 # -- listing current working directory
 alias clr='clear'
 alias ls='exa --git-ignore --group-directories-first -la'
 alias cl='clear; exa --git-ignore --group-directories-first -la'
 
-
 # -- cleaning pesky .DS_Store files
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
-
