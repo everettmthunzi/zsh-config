@@ -1,10 +1,10 @@
 #!/bin/zsh
 
 # -- gg = greater git
-# -- All unsafe/remove operations commence with gg! (read as great git remove)
+# -- All unsafe/remove operations are indicated with a bang (gg!)
 
-# -- checking relative difference
-function smart-diff() {
+# -- relative difference
+function greater-git-diff() {
 	# if changes already committed
 	if git diff-index --quiet HEAD --; then
 		git diff HEAD^ HEAD
@@ -20,10 +20,10 @@ function smart-diff() {
 }
 
 # -- safe-pulling submodules
-function submodule-pull() {
+function greater-git-pull() {
 	if [[ $(git submodule foreach 'git status') ]]; then
 		echo " -- found submodules!"
-		echo " -- switching to recursive submodule-pull strategy"
+		echo " -- switching to recursive greater-git-pull strategy"
 		git submodule update --remote
 		git pull --recurse-submodules
 	else
@@ -32,7 +32,7 @@ function submodule-pull() {
 }
 
 # -- safe-pushing with submodules
-function submodule-safe-push() {
+function greater-git-push() {
 	if [[ $(git submodule foreach 'git status') ]]; then
 		echo " -- todo implement safety check to protect submodules!"
 	else
@@ -41,22 +41,36 @@ function submodule-safe-push() {
 }
 
 # -- removing a submodule
-function rm-submodule() {
+function greater-git-rm-submodule() {
 	git submodule deinit -f -- $1
 	rm -rf .git/modules/$1
 	git rm -f $1
 }
 
-# -- discarding relative changes
-function discard-changes() {
+# -- undoing local changes
+function greater-git-undo() {
+	# -- un-staging files ??? repeat ???
+	# alias ggrS='git restore --staged'
+
+	# -- deleting new changes (not yet staged)
+	# alias ggr='git restore'
 	git restore $1
 }
 
+# -- removing files
+function greater-git-remove() {
+	git rm --cached $1
+	rm -rf $1
+}
+
+# -- removing files
+alias gg!='greater-git-remove'
+
 # -- removing a submodule
-alias gg!sub='rm-submodule'
+alias gg!sub='greater-git-rm-submodule'
 
 # -- removing changes
-alias gg!='discard-changes'
+alias gg!changes='greater-git-undo'
 
 # -- checking out
 alias ggco='git checkout'
@@ -89,28 +103,18 @@ alias ggrl='git reflog'
 alias ggv='git log --pretty="format:%h %G? %aN  %s"'
 
 # -- submodule-pulling
-alias ggpull='submodule-pull'
+alias ggpull='greater-git-pull'
 
 # -- pushing
-alias ggpush='submodule-safe-push'
+alias ggpush='greater-git-push'
 
 # # -- stashing
 alias ggst='git stash'
 
-# -- checking what changed/difference
-alias ggd='smart-diff'
+# -- what changed?
+alias ggd='greater-git-diff'
 alias ggdt='git difftool'
 
 # -- re-basing
-alias ggR='git rebase -i'
+alias ggrebase='git rebase -i'
 
-# -- un-staging files ??? repeat ???
-alias ggrS='git restore --staged'
-
-# -- deleting new changes (not yet staged)
-alias ggr='git restore'
-
-# # amend, merge, & edit-conflicts
-# alias gca='git commit --amend'
-# alias gmerge='git add --name-only --diff-filter=U'
-# alias gresolve='vim $(git diff --name-only --diff-filter=U)' # Use :wnext in vim (write changes and move on to next file).
