@@ -25,7 +25,6 @@ source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.ggit
 source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.tmux
 source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.mutt
 source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.latex
-source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.markdown
 source $HOME/<path-to>/dotfiles/zsh-dotfiles/aliases/.arbitrary
 ```
 Needless to say, as with all dotfiles across the Git galaxy, feel free to cherry-pick whatever may be of some benefit to you. One could also test drive this setup to see some of the as-is GOODNESS!
