@@ -1,7 +1,7 @@
 #!/bin/zsh
 
 # -- gg = greater git
-# -- All unsafe/remove operations are indicated with a bang (gg!)
+# -- ! = remove
 
 # -- relative difference
 function greater-git-diff() {
@@ -47,50 +47,27 @@ function greater-git-rm-submodule() {
 	git rm -f $1
 }
 
-# -- renaming a submodule
-function greater-git-rename-submodule() {
-	git submodule deinit -f -- $1
-	rm -rf .git/modules/$1
-	git rm -f $1
-	git submodule add $2
-}
-# -- renaming a submodule
-alias ggmvsub='greater-git-rename-submodule'
-
-# -- undoing local changes
-function greater-git-undo() {
-	# -- un-staging files ??? repeat ???
-	# alias ggrS='git restore --staged'
-
-	# -- deleting new changes (not yet staged)
-	# alias ggr='git restore'
-	git restore $1
-}
-
 # -- removing files
-function greater-git-remove() {
+function greater-git-remove-tracked() {
 	git rm --cached $1
 	rm -rf $1
 }
 
 # -- removing files
-alias gg!='greater-git-remove'
+alias gg!tracked='greater-git-remove-tracked'
 
 # -- adding remote
-alias gg+ro='git remote add origin'
-
-# -- pushing after adding an origin
-alias ggpush!='git push -u --force origin master'
+alias ggaddo='git remote add origin'
 
 # -- cloning
-alias gg+='git clone'
+alias ggclone='git clone'
 
 # -- adding and removing a submodules
-alias gg+sub='git submodule add'
-alias gg-sub='greater-git-rm-submodule'
+alias ggaddsub='git submodule add'
+alias ggrmsub='greater-git-rm-submodule'
 
 # -- removing changes
-alias gg!changes='greater-git-undo'
+alias gg!changes='git restore'
 
 # -- checking out
 alias ggco='git checkout'
@@ -112,15 +89,14 @@ alias ggaP='git add --patch $1'
 alias ggc='git commit -m'
 
 # -- resetting
-alias gg!h='git reset --hard'
-alias gg!s='git reset --soft'
+alias ggrh='git reset --hard'
+alias ggrs='git reset --soft'
 
 # -- viewing logs
 alias ggl='git log'
 alias ggrl='git reflog'
-
-# --verifying commits are signed: G=signed | N=not signed
 alias ggv='git log --pretty="format:%h %G? %aN  %s"'
+# ggv verifies commits are signed: G=signed | N=not signed
 
 # -- submodule-pulling
 alias ggpull='greater-git-pull'
