@@ -52,7 +52,7 @@ function greater-git-rename-submodule() {
 	git submodule deinit -f -- $1
 	rm -rf .git/modules/$1
 	git rm -f $1
-git submodule add $2
+	git submodule add $2
 }
 # -- renaming a submodule
 alias ggmvsub='greater-git-rename-submodule'

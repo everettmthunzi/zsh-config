@@ -2,7 +2,6 @@
 # see@ https://gist.github.com/aquaductape/
 # see@ https://gist.github.com/LukeSmithxyz/
 
-
 # -- auto-tab complete
 autoload -U compinit
 zstyle ':completion:*' menu select
