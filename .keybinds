@@ -98,7 +98,7 @@ function quick-source() {
 	THEME=powerlevel9k/powerlevel9k
 	antigen list | grep $THEME &>/dev/null
 	if [ $? -ne 0 ]; then
-		source $HOME/Repositories/dotfiles/antigen-conf/.theme 
+		source $HOME/Repositories/dotfiles/antigen-conf/.theme
 	fi
 	zle accept-line
 }
