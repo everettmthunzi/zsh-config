@@ -3,7 +3,7 @@
 # -- gg = GreaterGit
 
 # -- relative difference
-function greater-git-diff() {
+function greatergit-diff() {
 	# if changes already committed
 	if git diff-index --quiet HEAD --; then
 		git diff HEAD^ HEAD
@@ -19,10 +19,10 @@ function greater-git-diff() {
 }
 
 # -- safe-pulling submodules
-function greater-git-pull() {
+function greatergit-pull() {
 	if [[ $(git submodule foreach 'git status') ]]; then
 		echo " -- found submodules!"
-		echo " -- switching to recursive greater-git-pull strategy"
+		echo " -- switching to recursive greatergit-pull strategy"
 		git submodule update --remote
 		git pull --recurse-submodules
 	else
@@ -31,7 +31,7 @@ function greater-git-pull() {
 }
 
 # -- safe-pushing with submodules
-function greater-git-push() {
+function greatergit-push() {
 	if [[ $(git submodule foreach 'git status') ]]; then
 		echo " -- todo implement safety check to protect submodules!"
 	else
@@ -40,20 +40,27 @@ function greater-git-push() {
 }
 
 # -- removing a submodule
-function greater-git-rm-submodule() {
+function greatergit-rm-submodule() {
+	git submodule deinit -f -- $1
+	rm -rf .git/modules/$1
+	git rm -f $1
+}
+
+# -- removing a submodule
+function greatergit-rm-submodule() {
 	git submodule deinit -f -- $1
 	rm -rf .git/modules/$1
 	git rm -f $1
 }
 
 # -- removing files
-function greater-git-remove-tracked() {
+function greatergit-remove-tracked() {
 	git rm --cached $1
 	rm -rf $1
 }
 
 # -- removing files
-alias ggrmtracked='greater-git-remove-tracked'
+alias ggrmtracked='greatergit-remove-tracked'
 
 # -- adding remote
 alias ggaddo='git remote add origin'
@@ -63,7 +70,7 @@ alias ggclone='git clone'
 
 # -- adding and removing a submodules
 alias ggaddsub='git submodule add'
-alias ggrmsub='greater-git-rm-submodule'
+alias ggrmsub='greatergit-rm-submodule'
 
 # -- removing changes
 alias ggrmchanges='git restore'
@@ -98,16 +105,16 @@ alias ggv='git log --pretty="format:%h %G? %aN  %s"'
 # ggv verifies commits are signed: G=signed | N=not signed
 
 # -- submodule-pulling
-alias ggpull='greater-git-pull'
+alias ggpull='greatergit-pull'
 
 # -- pushing
-alias ggpush='greater-git-push'
+alias ggpush='greatergit-push'
 
 # # -- stashing
 alias ggst='git stash'
 
 # -- what changed?
-alias ggd='greater-git-diff'
+alias ggd='greatergit-diff'
 alias ggdt='git difftool'
 
 # -- re-basing
