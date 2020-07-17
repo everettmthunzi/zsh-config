@@ -30,13 +30,39 @@ function greatergit-pull() {
 	fi
 }
 
+# helper:
+function is-submodule() {
+	(cd "$(git rev-parse --show-toplevel)/.." &&
+		git rev-parse --is-inside-work-tree) | grep -q true
+}
+
 # -- safe-pushing with submodules
 function greatergit-push() {
+	CURRENT_DIR=$PWD
 	if [[ $(git submodule foreach 'git status') ]]; then
-		echo " -- todo implement safety check to protect submodules!"
+		echo " -- found submodules!"
+		echo " -- switching to check recursive submodule state"
+		for dir in $(find $PWD -maxdepth 1 -mindepth 1 -type d); do
+			cd $dir
+			if [[ -f .git ]]; then
+				if [[ $(git diff --stat) != '' ]]; then
+					echo
+					printf '%s\n' "${PWD##*/}"
+					[[ -z $(git status -s) ]] || echo ' -- modified'
+					git diff --quiet || echo ' -- dirty' # check working tree
+				fi
+			else
+			fi
+		done
+		echo -n "\n -- Continue push?  [Y/N]"
+		read REPLY
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			git push
+		fi
 	else
 		git push
 	fi
+	cd $CURRENT_DIR
 }
 
 # -- removing a submodule
@@ -59,6 +85,7 @@ function greatergit-remove-tracked() {
 
 # -- global report on local repositories
 function report() {
+	CURRENT_DIR=$PWD
 	for dir in $(find $HOME/Repositories -maxdepth 2 -mindepth 1 -type d); do
 		cd $dir
 		if [ -d .git ]; then
@@ -73,6 +100,7 @@ function report() {
 			git rev-parse --git-dir &>/dev/null
 		fi
 	done
+	cd $CURRENT_DIR
 }
 
 # -- checking status on all repositories
