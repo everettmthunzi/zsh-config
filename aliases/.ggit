@@ -22,7 +22,7 @@ function greatergit-diff() {
 function greatergit-pull() {
 	if [[ $(git submodule foreach 'git status') ]]; then
 		echo " -- found submodules!"
-		echo " -- switching to recursive greatergit-pull strategy"
+		echo " -- switching to recursive pull strategy"
 		git submodule update --remote
 		git pull --recurse-submodules
 	else
@@ -46,11 +46,9 @@ function greatergit-rm-submodule() {
 	git rm -f $1
 }
 
-# -- removing a submodule
-function greatergit-rm-submodule() {
-	git submodule deinit -f -- $1
-	rm -rf .git/modules/$1
-	git rm -f $1
+# -- cloning recursive submodules
+function greatergit-clone-recursive() {
+	git clone --recursive
 }
 
 # -- removing files
@@ -59,11 +57,35 @@ function greatergit-remove-tracked() {
 	rm -rf $1
 }
 
+# -- global report on local repositories
+function report() {
+	for dir in $(find $HOME/Repositories -maxdepth 2 -mindepth 1 -type d); do
+		cd $dir
+		if [ -d .git ]; then
+			if [[ $(git diff --stat) != '' ]]; then
+				echo
+				basename $(git rev-parse --show-toplevel) # get repo name
+				[[ -z $(git status -s) ]] || echo ' -- modified'
+				git diff --quiet || echo ' -- dirty' # check working tree
+			fi
+			#[[ -n $(git status -s) ]] || echo ' -- clean'
+		else
+			git rev-parse --git-dir &>/dev/null
+		fi
+	done
+}
+
+# -- checking status on all repositories
+alias status=report
+
+# -- removing files
+alias ggcloner='greatergit-clone-recursive'
+
 # -- removing files
 alias ggrmtracked='greatergit-remove-tracked'
 
 # -- adding remote
-alias ggaddo='git remote add origin'
+alias ggaddorigin='git remote add origin'
 
 # -- cloning
 alias ggclone='git clone'
