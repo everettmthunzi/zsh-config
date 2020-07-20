@@ -1,0 +1,4 @@
+#!/bin/zsh
+
+## cloud compare
+alias cc='cloudcompare.CloudCompare'

@@ -1,28 +1,23 @@
 #!/bin/zsh
 
-# -- gg = GreaterGit
+# git aliases Everett M - 20/July/2020
+# submodule workflows (gg used to avoid conflicts)
 
-# -- relative difference
-function greatergit-diff() {
-	# if changes already committed
-	if git diff-index --quiet HEAD --; then
-		git diff HEAD^ HEAD
-	else
-		# if changes made (but not staged)
-		if git diff --cached --exit-code; then
-			git diff
-		else
-			# if changes staged (but not committed)
-			git diff --cached
-		fi
-	fi
+function is-submodule() {
+	(cd "$(git rev-parse --show-toplevel)/.." &&
+		git rev-parse --is-inside-work-tree) | grep -q true
 }
 
-# -- safe-pulling submodules
-function greatergit-pull() {
-	if [[ $(git submodule foreach 'git status') ]]; then
-		echo " -- found submodules!"
-		echo " -- switching to recursive pull strategy"
+# -- removing a submodule
+function ggsub-remove() {
+	git submodule deinit -f -- $1
+	rm -rf .git/modules/$1
+	git rm -f $1
+}
+
+# -- pulling submodules
+function ggsub-pull() {
+	if [[ $(git submodule foreach 'git status') ]]; then # if submodules exist
 		git submodule update --remote
 		git pull --recurse-submodules
 	else
@@ -30,26 +25,44 @@ function greatergit-pull() {
 	fi
 }
 
-# helper:
-function is-submodule() {
-	(cd "$(git rev-parse --show-toplevel)/.." &&
-		git rev-parse --is-inside-work-tree) | grep -q true
+# -- ignoring submodules
+function ggsub-ignore() {
+	eval "git config submodule.$1.ignore all"
 }
 
-# -- safe-pushing with submodules
-function greatergit-push() {
+# -- showing all submodules
+function ggsub-list() {
+	git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
+}
+
+# -- checking the most recent change
+function gg-diff() {
+	if git diff-index --quiet HEAD --; then # if after commit
+		git diff HEAD^ HEAD
+	else
+		if git diff --cached --exit-code; then # if after state
+			git diff
+		else
+			git diff --cached # if after change
+		fi
+	fi
+}
+
+# -- pushing submodules
+function ggsub-push() {
 	CURRENT_DIR=$PWD
 	if [[ $(git submodule foreach 'git status') ]]; then
-		echo " -- found submodules!"
-		echo " -- switching to check recursive submodule state"
 		for dir in $(find $PWD -maxdepth 1 -mindepth 1 -type d); do
 			cd $dir
 			if [[ -f .git ]]; then
 				if [[ $(git diff --stat) != '' ]]; then
 					echo
 					printf '%s\n' "${PWD##*/}"
-					[[ -z $(git status -s) ]] || echo ' -- modified'
 					git diff --quiet || echo ' -- dirty' # check working tree
+				else
+					echo
+					printf '%s\n' "${PWD##*/}"
+					[[ -n $(git status -s) ]] || echo ' -- clean'
 				fi
 			else
 			fi
@@ -65,25 +78,7 @@ function greatergit-push() {
 	cd $CURRENT_DIR
 }
 
-# -- removing a submodule
-function greatergit-rm-submodule() {
-	git submodule deinit -f -- $1
-	rm -rf .git/modules/$1
-	git rm -f $1
-}
-
-# -- cloning recursive submodules
-function greatergit-clone-recursive() {
-	git clone --recursive
-}
-
-# -- removing files
-function greatergit-remove-tracked() {
-	git rm --cached $1
-	rm -rf $1
-}
-
-# -- global report on local repositories
+# -- checking status all repositories
 function report() {
 	CURRENT_DIR=$PWD
 	for dir in $(find $HOME/Repositories -maxdepth 2 -mindepth 1 -type d); do
@@ -92,10 +87,8 @@ function report() {
 			if [[ $(git diff --stat) != '' ]]; then
 				echo
 				basename $(git rev-parse --show-toplevel) # get repo name
-				[[ -z $(git status -s) ]] || echo ' -- modified'
-				git diff --quiet || echo ' -- dirty' # check working tree
+				git diff --quiet || echo ' -- dirty'      # check working tree
 			fi
-			#[[ -n $(git status -s) ]] || echo ' -- clean'
 		else
 			git rev-parse --git-dir &>/dev/null
 		fi
@@ -103,72 +96,108 @@ function report() {
 	cd $CURRENT_DIR
 }
 
-# -- checking status on all repositories
-alias status=report
+<<<<<<< HEAD
+# -- commit ... less the quotation marks
+function gg-commit() {
+	eval "git commit -m \"$@\""
+}
 
 # -- removing files
-alias ggcloner='greatergit-clone-recursive'
+function gg-remove-file() {
+	git rm --cached $1
+	rm -rf $1
+=======
+# -- ignoring submodules todo
+function greatergit-submodule-ignore() {
+    eval "git config submodule.$1.ignore all"
+	if [ "$?" -eq "0" ]; then
+		printf " %.s-- $1 ignored! \n"
+	else
+		printf " %.s-- $1 not ignored something went wrong! \n"
+	fi
 
-# -- removing files
-alias ggrmtracked='greatergit-remove-tracked'
+}
 
-# -- adding remote
-alias ggaddorigin='git remote add origin'
+# -- showing all submodules and submodule paths
+function greatergit-submodule-list() {
+	#git config --file .gitmodules --name-only --get-regexp path # name only
+	git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
+>>>>>>> 242f2f7... update
+}
 
-# -- cloning
+# -- add submodule
+alias ggsubadd='git submodule add'
+
+# -- remove submodule
+alias ggsubrm='ggsub-remove'
+
+# -- pull submodules
+alias ggpull='ggsub-pull'
+
+# -- push submodules
+alias ggpush='ggsub-push'
+
+# --list submodules
+alias ggsublist='ggsub-list'
+
+# -- ignore submodule
+alias ggsubignore='ggsub-ignore'
+
+# -- global status report on all repos
+alias ggstatus=report
+
+<<<<<<< HEAD
+# -- remove file
+alias ggrmfile='gg-remove-file'
+=======
+# -- adding and removing a submodules
+alias ggsubadd='git submodule add'
+alias ggsubrm='greatergit-rm-submodule'
+>>>>>>> 242f2f7... update
+
+# -- clone
 alias ggclone='git clone'
 
-# -- adding and removing a submodules
-alias ggaddsub='git submodule add'
-alias ggrmsub='greatergit-rm-submodule'
-
-# -- removing changes
-alias ggrmchanges='git restore'
-
-# -- checking out
+# -- check out
 alias ggco='git checkout'
 
-# -- moving files
-alias ggm='git mv'
+# -- mv file
+alias ggmv='git mv'
 
-# -- viewing repository size
+# -- check repo size
 alias ggsize='git count-objects -vH'
 
-# -- viewing repository status
+# -- check repo status
 alias ggs='git status'
 
-# -- adding cache
+# -- stage all changes
 alias gga='git add .'
-alias ggaP='git add --patch $1'
 
-# -- viewing repository status
-alias ggc='git commit -m'
+# -- select what to stage
+alias ggpatch='git add --patch $1'
 
-# -- resetting
-alias ggrh='git reset --hard'
-alias ggrs='git reset --soft'
+# -- commit
+alias ggc='gg-commit'
+
+# -- rebase
+alias ggrebase='git rebase -i'
+
+# -- list tracked
+alias gglisttracked='git ls-tree -r master --name-only'
+
+# -- reset hard
+alias ggrhard='git reset --hard'
+
+# -- reset soft
+alias ggrsoft='git reset --soft'
+
+# -- show latest change
+alias ggdiff='gg-diff'
+
+# -- use diff tool
+alias ggdifftool='git difftool'
 
 # -- viewing logs
 alias ggl='git log'
 alias ggrl='git reflog'
-alias ggv='git log --pretty="format:%h %G? %aN  %s"'
-# ggv verifies commits are signed: G=signed | N=not signed
-
-# -- submodule-pulling
-alias ggpull='greatergit-pull'
-
-# -- pushing
-alias ggpush='greatergit-push'
-
-# # -- stashing
-alias ggst='git stash'
-
-# -- what changed?
-alias ggd='greatergit-diff'
-alias ggdt='git difftool'
-
-# -- re-basing
-alias ggrebase='git rebase -i'
-
-# -- tracked files
-alias ggtracked='git ls-tree -r master --name-only'
+alias ggverify='git log --pretty="format:%h %G? %aN  %s"'
