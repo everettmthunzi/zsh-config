@@ -96,7 +96,6 @@ function report() {
 	cd $CURRENT_DIR
 }
 
-<<<<<<< HEAD
 # -- commit ... less the quotation marks
 function gg-commit() {
 	eval "git commit -m \"$@\""
@@ -106,23 +105,6 @@ function gg-commit() {
 function gg-remove-file() {
 	git rm --cached $1
 	rm -rf $1
-=======
-# -- ignoring submodules todo
-function greatergit-submodule-ignore() {
-    eval "git config submodule.$1.ignore all"
-	if [ "$?" -eq "0" ]; then
-		printf " %.s-- $1 ignored! \n"
-	else
-		printf " %.s-- $1 not ignored something went wrong! \n"
-	fi
-
-}
-
-# -- showing all submodules and submodule paths
-function greatergit-submodule-list() {
-	#git config --file .gitmodules --name-only --get-regexp path # name only
-	git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
->>>>>>> 242f2f7... update
 }
 
 # -- add submodule
@@ -146,14 +128,8 @@ alias ggsubignore='ggsub-ignore'
 # -- global status report on all repos
 alias ggstatus=report
 
-<<<<<<< HEAD
 # -- remove file
 alias ggrmfile='gg-remove-file'
-=======
-# -- adding and removing a submodules
-alias ggsubadd='git submodule add'
-alias ggsubrm='greatergit-rm-submodule'
->>>>>>> 242f2f7... update
 
 # -- clone
 alias ggclone='git clone'
