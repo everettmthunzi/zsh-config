@@ -67,7 +67,7 @@ function ggsub-push() {
 			else
 			fi
 		done
-		echo -n " -- Continue push?  [Y/N]"
+		echo -n "\n -- Continue push?  [Y/N]"
 		read REPLY
 		if [[ $REPLY =~ ^[Yy]$ ]]; then
 			git push
