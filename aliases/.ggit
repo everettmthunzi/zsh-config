@@ -107,12 +107,6 @@ function gg-remove-file() {
 	rm -rf $1
 }
 
-# -- checking branch along with status
-function ggb-status() {
-	git branch
-	git status
-}
-
 # -- add submodule
 alias ggsubadd='git submodule add'
 
@@ -153,7 +147,7 @@ alias ggmv='git mv'
 alias ggsize='git count-objects -vH'
 
 # -- check repo status
-alias ggs='ggb-status'
+alias ggs='git status'
 
 # -- stage all changes
 alias gga='git add .'
