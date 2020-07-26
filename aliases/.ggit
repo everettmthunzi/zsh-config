@@ -83,9 +83,11 @@ function ggsub_push() {
     echo -n "\n -- Continue push?  [Y/N]"
     read -r REPLY
     if [[ $REPLY =~ ^[Yy]$ ]]; then
+      cd "$curr_wd" || return
       git push origin master
     fi
   else
+    cd "$curr_wd" || return
     git push origin master
   fi
   cd "$curr_wd" || return
@@ -95,7 +97,7 @@ function ggsub_push() {
 function report() {
   curr_wd="$PWD"
   report_submodule_state "$HOME/Repositories/"
-cd "$curr_wd" || return
+  cd "$curr_wd" || return
 }
 
 function gg_commit() {
