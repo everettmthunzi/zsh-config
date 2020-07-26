@@ -19,3 +19,6 @@ alias cl='clear; exa --git-ignore --group-directories-first -la'
 
 # -- cleaning pesky .DS_Store files
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
+
+# -- cmake helper
+alias cxxmake='$HOME/Repositories/dotfiles/helpers/cmake.sh'
