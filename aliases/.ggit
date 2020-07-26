@@ -1,134 +1,141 @@
 #!/bin/zsh
-
 # git aliases Everett M - 20/July/2020
-# submodule workflows (gg to avoid conflicts)
+# optimized for submodule workflow
 
-function is-submodule() {
-	(cd "$(git rev-parse --show-toplevel)/.." &&
-		git rev-parse --is-inside-work-tree) | grep -q true
+function is_submodule() {
+  (cd "$(git rev-parse --show-toplevel)/.." &&
+    git rev-parse --is-inside-work-tree) | grep -q true
 }
 
 # -- removing a submodule
-function ggsub-remove() {
-	git submodule deinit -f -- $1
-	rm -rf .git/modules/$1
-	git rm -f $1
+function ggsub_remove() {
+  git submodule deinit -f -- "$1"
+  rm -rf .git/modules/"$1"
+  git rm -f "$1"
 }
 
 # -- pulling submodules
-function ggsub-pull() {
-	if [[ $(git submodule foreach 'git status') ]]; then # if submodules exist
-		git submodule update --remote
-		git pull --recurse-submodules
-	else
-		git pull
-	fi
+function ggsub_pull() {
+  if [[ $(git submodule foreach 'git status') ]]; then # if submodules exist
+    git submodule update --remote
+    git pull --recurse-submodules
+  else
+    git pull
+  fi
 }
 
 # -- ignoring submodules
-function ggsub-ignore() {
-	eval "git config submodule.$1.ignore all"
+function ggsub_ignore() {
+  eval "git config submodule.$1.ignore all"
 }
 
 # -- showing all submodules
-function ggsub-list() {
-	git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
+function ggsub_list() {
+  git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
 }
 
 # -- checking the most recent change
-function gg-diff() {
-	if git diff-index --quiet HEAD --; then # if after commit
-		git diff HEAD^ HEAD
-	else
-		if git diff --cached --exit-code; then # if after state
-			git diff
-		else
-			git diff --cached # if after change
-		fi
-	fi
+function gg_diff() {
+  if git diff-index --quiet HEAD --; then # if after commit
+    git diff HEAD^ HEAD
+  else
+    if git diff --cached --exit-code; then # if after state
+      git diff
+    else
+      git diff --cached # if after change
+    fi
+  fi
 }
 
-# -- pushing submodules
-function ggsub-push() {
-	CURRENT_DIR=$PWD
-	if [[ $(git submodule foreach 'git status') ]]; then
-		for dir in $(find $PWD -maxdepth 1 -mindepth 1 -type d); do
-			cd $dir
-			if [[ -f .git ]]; then
-				if [[ $(git diff --stat) != '' ]]; then
-					echo
-					printf '%s\n' "${PWD##*/}"
-					git diff --quiet || echo ' -- dirty' # check working tree
-				else
-					echo
-					printf '%s\n' "${PWD##*/}"
-					[[ -n $(git status -s) ]] || echo ' -- clean'
-				fi
-			else
-			fi
-		done
-		echo -n "\n -- Continue push?  [Y/N]"
-		read REPLY
-		if [[ $REPLY =~ ^[Yy]$ ]]; then
-			git push origin master
-		fi
-	else
-		git push origin master
-	fi
-	cd $CURRENT_DIR
+# -- checking for submodules
+function has_submodules() {
+  if [[ $(git submodule foreach 'git status') ]]; then
+    true
+  else
+    false
+  fi
+}
+
+# -- checking each submodules state
+function report_submodule_state() {
+  root="$1"
+  for dir in $(find "$root" -maxdepth 2 -mindepth 1 -type d); do
+    cd "$dir" || return
+    if [[ -f .git ]]; then
+      if [[ $(git diff --stat) != '' ]]; then
+        echo
+        printf '%s\n' "${PWD##*/}"           # report repo name
+        git diff --quiet || echo ' -- dirty' # report dirty state
+      else
+        echo
+        printf '%s\n' "${PWD##*/}"
+        [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
+      fi
+    fi
+  done
+}
+
+# -- safely pushing a repo with submodules
+function ggsub_push() {
+  curr_wd="$PWD"
+  if has_submodules; then
+    report_submodule_state "$PWD"
+    echo -n "\n -- Continue push?  [Y/N]"
+    read -r REPLY
+    if [[ $REPLY =~ ^[Yy]$ ]]; then
+      git push origin master
+    fi
+  else
+    git push origin master
+  fi
+  cd "$curr_wd" || return
 }
 
 # -- checking status all repositories
 function report() {
-	CURRENT_DIR=$PWD
-	for dir in $(find $HOME/Repositories -maxdepth 2 -mindepth 1 -type d); do
-		cd $dir
-		if [ -d .git ]; then
-			if [[ $(git diff --stat) != '' ]]; then
-				echo
-				basename $(git rev-parse --show-toplevel) # get repo name
-				git diff --quiet || echo ' -- dirty'      # check working tree
-			fi
-		else
-			git rev-parse --git-dir &>/dev/null
-		fi
-	done
-	cd $CURRENT_DIR
+  curr_wd="$PWD"
+  report_submodule_state "$HOME/Repositories/"
+cd "$curr_wd" || return
 }
 
-function gg-commit() {
-	eval "git commit -m \"$@\""
+function gg_commit() {
+  eval "git commit -m \"$*\""
 }
 
 # -- removing files
-function gg-remove-file() {
-	git rm --cached $1
-	rm -rf $1
+function gg_remove_file() {
+  git rm --cached "$1"
+  rm -rf "$1"
+}
+
+# -- patch adding
+function gg_add_patch() {
+  git add --patch "$1"
 }
 
 # -- add submodule
 alias ggsubadd='git submodule add'
 
 # -- remove submodule
-alias ggsubrm='ggsub-remove'
+alias ggsubrm='ggsub_remove'
 
 # -- pull submodules
-alias ggpull='ggsub-pull'
+alias ggpull='ggsub_pull'
 
 # -- push submodules
-alias ggpush='ggsub-push'
+alias ggpush='ggsub_push'
 
 # --list submodules
-alias ggsublist='ggsub-list'
+alias ggsublist='ggsub_list'
 
 # -- ignore submodule
-alias ggsubignore='ggsub-ignore'
+alias ggsubignore='ggsub_ignore'
 
 # -- global status report on all repos
 alias ggstatus=report
 
 # -- remove file
-alias ggrmfile='gg-remove-file'
+alias ggrmfile='gg_remove_file'
 
 # -- clone
 alias ggclone='git clone'
@@ -149,10 +156,10 @@ alias ggs='git status'
 alias gga='git add .'
 
 # -- select what to stage
-alias ggpatch='git add --patch $1'
+alias ggpatch='gg_add_patch'
 
 # -- commit
-alias ggc='gg-commit'
+alias ggc='gg_commit'
 
 # -- rebase
 alias ggrebase='git rebase -i'
@@ -167,7 +174,7 @@ alias ggrhard='git reset --hard'
 alias ggrsoft='git reset --soft'
 
 # -- show latest change
-alias ggdiff='gg-diff'
+alias ggdiff='gg_diff'
 
 # -- use diff tool
 alias ggdifftool='git difftool'

@@ -15,12 +15,10 @@ bindkey '^e' edit-command-line
 
 # ([) >> fzf find + vim-open
 function ffind-file() {
-	file=$(fd . $REPOSITORIES --type f --hidden --follow --exclude ".git" | fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :20 {}')
+	file=$(fd . "$REPOSITORIES" --type f --hidden --follow --exclude ".git" | fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :20 {}')
 
-	if [ -z ${file} ]; then
-		# do nothing on escape/no file selected!
-	else
-		vim $file </dev/tty # tell vim input is from terminal
+	if [ -n "${file}" ]; then
+		vim "$file" </dev/tty # tell vim input is from terminal
 	fi
 	zle accept-line
 }
@@ -31,7 +29,7 @@ bindkey -M vicmd "\[" ffind-file # in vim cmd mode
 # (]) >> fzf dir find + open
 function ffind-dir() {
 	local dir
-	dir=$(fd . $REPOSITORIES --type d --hidden --follow --exclude ".git" | fzf +m) && cd "$dir"
+	dir=$(fd . "$REPOSITORIES" --type d --hidden --follow --exclude ".git" | fzf +m) && cd "$dir" || return
 	zle accept-line
 }
 zle -N ffind-dir                # define widget (from function)
@@ -61,44 +59,45 @@ bindkey -M vicmd 'q' quick-exit # in vim cmd mode
 BACKUP_DIR=$HOME/old
 DOTFILES_TARGET_DIR=$HOME/
 DOTFILES_SOURCE_DIR=$HOME/Repositories/dotfiles/
-DOTFILES=$HOME/Repositories/dotfiles/dotfiles.txt
+DOTFILES=$HOME/Repositories/dotfiles/res/dotfiles.txt
+
 function backup-dotfiles() {
-	# cat file-list.txt | xargs -n1 -I {} mv source/{} target/
-	cat $DOTFILES | xargs -n1 -I {} mv $DOTFILES_TARGET_DIR{} $BACKUP_DIR
-	if [ "$?" -eq "0" ]; then
-		printf '\n %.s-- current dotfiles backed up in <old/> \n'
+	if < "$DOTFILES" tr ' ' _ | xargs -n1 -I {} mv "$DOTFILES_TARGET_DIR"{} "$BACKUP_DIR"; then
+		printf '\n%.s-- current dotfiles backed up in <old/> \n'
 	else
-		printf '\n %.s-- backing up current dotfiles failed! \n'
+		printf '\n%.s-- backing up current dotfiles failed! \n'
+
 	fi
 }
 
 function update-dotfiles() {
-	cat $DOTFILES | xargs -n1 -I {} cp -R $DOTFILES_SOURCE_DIR{} $DOTFILES_TARGET_DIR
-
-	if [ "$?" -eq "0" ]; then
-		printf ' %.s-- dotfiles update successful'
+	if < "$DOTFILES" tr ' ' _ | xargs -n1 -I {} cp -R "$DOTFILES_SOURCE_DIR"{} "$DOTFILES_TARGET_DIR"; then
+		printf '%.s-- dotfiles update successful'
 	else
-		printf ' %.s-- dotfiles update failed!'
+		printf '%.s-- dotfiles update failed!'
 	fi
 }
 
 function quick-source() {
-	if [ -d $BACKUP_DIR ]; then rm -Rf $BACKUP_DIR; fi # todo: introduce [Y/N]
+	if [ -d "$BACKUP_DIR" ]; then
+	  rm -Rf "$BACKUP_DIR"
+	  fi
 
 	# -- backing up
-	mkdir $BACKUP_DIR && backup-dotfiles
+	mkdir "$BACKUP_DIR" && backup-dotfiles
 
 	# -- updating to dotfiles from repository
 	update-dotfiles
 
 	# -- sourcing .zshrc (</dev/tty>) == input from terminal
+	# shellcheck disable=SC1090
 	source $HOME/.zshrc &>/dev/null </dev/tty
 
 	# -- making custom theme is persistent on error
 	THEME=powerlevel9k/powerlevel9k
-	antigen list | grep $THEME &>/dev/null
-	if [ $? -ne 0 ]; then
-		source $HOME/Repositories/dotfiles/antigen-conf/.theme
+	if antigen list | grep $THEME &>/dev/null; then
+		# shellcheck disable=SC1090
+		source $HOME/Repositories/dotfiles/antigen-dotfiles/.theme &>/dev/null
 	fi
 	zle accept-line
 }

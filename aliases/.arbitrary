@@ -21,4 +21,4 @@ alias cl='clear; exa --git-ignore --group-directories-first -la'
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 
 # -- cmake helper
-alias cxxmake='$HOME/Repositories/dotfiles/helpers/cmake.sh'
+alias cxxmake='$HOME/Repositories/dotfiles/res/helpers/cmake.sh'
