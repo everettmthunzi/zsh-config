@@ -59,18 +59,18 @@ function has_submodules() {
 # -- checking each submodules state
 function report_submodule_state() {
   curr_wd="$PWD"
-	for dir in $(find "$1" -maxdepth 2 -type d); do
+	for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
 		cd "$dir" || return
-		if [ -d .git ]; then
+		if [ -f .git ] || [ -d .git ]; then
 			if [[ $(git diff --stat) != '' ]]; then
 				echo
-        printf '%s\n' "${PWD##*/}"           # report repo name
-				# basename $(git rev-parse --show-toplevel) # get repo name
+        printf '%s\n' "${PWD##*/}" || basename "$(git rev-parse --show-toplevel)" # get repo name
 				git diff --quiet || echo ' -- dirty'      # check working tree
-       else
-         echo
-         printf '%s\n' "${PWD##*/}"
-         [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
+         # only show dirty? alternately, uncomment to see clean
+       #else
+         #echo
+         # printf '%s\n' "${PWD##*/}"
+         # [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
 			fi
 		else
 			git rev-parse --git-dir &>/dev/null
