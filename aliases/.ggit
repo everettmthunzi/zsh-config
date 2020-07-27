@@ -59,7 +59,7 @@ function has_submodules() {
 # -- checking each submodules state
 function report_submodule_state() {
   curr_wd="$PWD"
-	for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
+	for dir in $(find "$1" -maxdepth 2 -type d); do
 		cd "$dir" || return
 		if [ -d .git ]; then
 			if [[ $(git diff --stat) != '' ]]; then
