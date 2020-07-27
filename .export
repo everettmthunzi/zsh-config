@@ -1,36 +1,50 @@
 #!/bin/zsh
 
-# -- making vim persistent in linux-gnu environments
+# terminal:
+GPG_TTY=$(tty)
+export GPG_TTY
+
+#timeout:
+export KEYTIMEOUT=1
+
+# terminal user name:
+DEFAULT_USER=$(id -un)
+export DEFAULT_USER
+
+# LANG:
+export LC_ALL=en_US.UTF-8
+
+# colors:
+export TERM="xterm-256color"
+
+# vim: persisting in linux-gnu environments
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
 	export EDITOR=/usr/bin/vim
 	export VISUAL=/usr/bin/vim
 fi
 
+# fzf:
 export FZF_BASE="$HOME/.fzf"
-
-# -- default default command
-# -- safely using fd cross platform
-# -- fd = fdfind in Debian-based Linux distributions
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
 	export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 elif [[ "$OSTYPE" == "darwin"* ]]; then
 	export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 fi
-
-# -- default options for fzf
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
-# -- exporting terminal type
-export GPG_TTY=$(tty)
+# dotfiles paths
+DOTFILES_PATH=$HOME/Repositories/dotfiles
+ANTIGEN_PATH=$HOME/Repositories/dotfiles/res/antigen
+ZSH_DOTFILES_PATH=$HOME/Repositories/dotfiles/zsh-dotfiles
+VIM_DOTFILES_PATH=$HOME/Repositories/dotfiles/vim-dotfiles
+MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt
+TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
+ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
 
-# -- specifying escape delay/timeout
-export KEYTIMEOUT=1
-
-# -- setting LANG
-export LC_ALL=en_US.UTF-8
-
-# -- 256 colors
-export TERM="xterm-256color"
-
-# removing verbose user-name
-export DEFAULT_USER=$(id -un)
+export ANTIGEN_PATH
+export DOTFILES_PATH
+export ZSH_DOTFILES_PATH
+export VIM_DOTFILES_PATH
+export MUTT_DOTFILES_PATH
+export TMUX_DOTFILES_PATH
+export ANTIGEN_DOTFILES_PATH

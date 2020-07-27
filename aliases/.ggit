@@ -58,21 +58,25 @@ function has_submodules() {
 
 # -- checking each submodules state
 function report_submodule_state() {
-  root="$1"
-  for dir in $(find "$root" -maxdepth 2 -mindepth 1 -type d); do
-    cd "$dir" || return
-    if [[ -f .git ]]; then
-      if [[ $(git diff --stat) != '' ]]; then
-        echo
+  curr_wd="$PWD"
+	for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
+		cd "$dir" || return
+		if [ -d .git ]; then
+			if [[ $(git diff --stat) != '' ]]; then
+				echo
         printf '%s\n' "${PWD##*/}"           # report repo name
-        git diff --quiet || echo ' -- dirty' # report dirty state
-      else
-        echo
-        printf '%s\n' "${PWD##*/}"
-        [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
-      fi
-    fi
-  done
+				# basename $(git rev-parse --show-toplevel) # get repo name
+				git diff --quiet || echo ' -- dirty'      # check working tree
+       else
+         echo
+         printf '%s\n' "${PWD##*/}"
+         [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
+			fi
+		else
+			git rev-parse --git-dir &>/dev/null
+		fi
+	done
+	cd "$curr_wd" || return
 }
 
 # -- safely pushing a repo with submodules
@@ -96,7 +100,7 @@ function ggsub_push() {
 # -- checking status all repositories
 function report() {
   curr_wd="$PWD"
-  report_submodule_state "$HOME/Repositories/"
+  report_submodule_state "$HOME/Repositories"
   cd "$curr_wd" || return
 }
 
@@ -134,7 +138,7 @@ alias ggsublist='ggsub_list'
 alias ggsubignore='ggsub_ignore'
 
 # -- global status report on all repos
-alias ggstatus=report
+alias ggstatus='report'
 
 # -- remove file
 alias ggrmfile='gg_remove_file'
