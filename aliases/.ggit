@@ -17,8 +17,8 @@ function ggsub_remove() {
 # -- pulling submodules
 function ggsub_pull() {
 	curr_wd="$PWD"
-        # todo: first check if dirty
-        # use same safety strategy as git push
+	# todo: first check if dirty
+	# use same safety strategy as git push
 	if has_submodules; then
 		git submodule update --remote
 		git pull --recurse-submodules
@@ -70,14 +70,14 @@ function has_submodules() {
 # -- checking each submodules state
 function report_submodule_state() {
 	curr_wd="$PWD"
-	for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
+	for dir in $(find "$1" -maxdepth 3 -mindepth 1 -type d); do
 		cd "$dir" || return
 		if [ -f .git ] || [ -d .git ]; then
 			if [[ $(git diff --stat) != '' ]]; then
 				echo
 				printf '%s\n' "${PWD##*/}" || basename "$(git rev-parse --show-toplevel)" # get repo name
 				git diff --quiet || echo ' -- dirty'                                      # check working tree
-				# only show dirty? alternately, uncomment to see clean
+				# alternately uncomment to see clean
 				#else
 				#echo
 				# printf '%s\n' "${PWD##*/}"
@@ -126,8 +126,17 @@ function gg_remove_file() {
 }
 
 # -- patch adding
-function gg_add_patch() {
+function ggadd_patch() {
 	git add --patch "$1"
+}
+
+# -- patch adding
+function ggadd() {
+	if [ -z "$1" ]; then
+		git add .
+	else
+		git add --patch "$1"
+	fi
 }
 
 # -- add submodule
@@ -170,10 +179,10 @@ alias ggsize='git count-objects -vH'
 alias ggs='git status'
 
 # -- stage all changes
-alias gga='git add .'
+alias gga='ggadd'
 
 # -- select what to stage
-alias ggpatch='gg_add_patch'
+alias ggpatch='ggadd_patch'
 
 # -- commit
 alias ggc='gg_commit'
