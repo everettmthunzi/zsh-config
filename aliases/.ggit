@@ -3,74 +3,85 @@
 # optimized for submodule workflow
 
 function is_submodule() {
-  (cd "$(git rev-parse --show-toplevel)/.." &&
-    git rev-parse --is-inside-work-tree) | grep -q true
+	(cd "$(git rev-parse --show-toplevel)/.." &&
+		git rev-parse --is-inside-work-tree) | grep -q true
 }
 
 # -- removing a submodule
 function ggsub_remove() {
-  git submodule deinit -f -- "$1"
-  rm -rf .git/modules/"$1"
-  git rm -f "$1"
+	git submodule deinit -f -- "$1"
+	rm -rf .git/modules/"$1"
+	git rm -f "$1"
 }
 
 # -- pulling submodules
 function ggsub_pull() {
-  if [[ $(git submodule foreach 'git status') ]]; then # if submodules exist
-    git submodule update --remote
-    git pull --recurse-submodules
-  else
-    git pull
-  fi
+	curr_wd="$PWD"
+        # todo: first check if dirty
+        # use same safety strategy as git push
+	if has_submodules; then
+		git submodule update --remote
+		git pull --recurse-submodules
+
+		for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
+			cd "$dir" || return
+			if [ -d .git ]; then
+				git checkout master
+			fi
+		done
+	else
+		git pull
+	fi
+	cd $curr_wd || return
 }
 
 # -- ignoring submodules
 function ggsub_ignore() {
-  eval "git config submodule.$1.ignore all"
+	eval "git config submodule.$1.ignore all"
 }
 
 # -- showing all submodules
 function ggsub_list() {
-  git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
+	git config --file .gitmodules --get-regexp path | awk '{ print $2 }'
 }
 
 # -- checking the most recent change
 function gg_diff() {
-  if git diff-index --quiet HEAD --; then # if after commit
-    git diff HEAD^ HEAD
-  else
-    if git diff --cached --exit-code; then # if after state
-      git diff
-    else
-      git diff --cached # if after change
-    fi
-  fi
+	if git diff-index --quiet HEAD --; then # if after commit
+		git diff HEAD^ HEAD
+	else
+		if git diff --cached --exit-code; then # if after state
+			git diff
+		else
+			git diff --cached # if after change
+		fi
+	fi
 }
 
 # -- checking for submodules
 function has_submodules() {
-  if [[ $(git submodule foreach 'git status') ]]; then
-    true
-  else
-    false
-  fi
+	if [[ $(git submodule foreach 'git status') ]]; then
+		true
+	else
+		false
+	fi
 }
 
 # -- checking each submodules state
 function report_submodule_state() {
-  curr_wd="$PWD"
+	curr_wd="$PWD"
 	for dir in $(find "$1" -maxdepth 2 -mindepth 1 -type d); do
 		cd "$dir" || return
 		if [ -f .git ] || [ -d .git ]; then
 			if [[ $(git diff --stat) != '' ]]; then
 				echo
-        printf '%s\n' "${PWD##*/}" || basename "$(git rev-parse --show-toplevel)" # get repo name
-				git diff --quiet || echo ' -- dirty'      # check working tree
-         # only show dirty? alternately, uncomment to see clean
-       #else
-         #echo
-         # printf '%s\n' "${PWD##*/}"
-         # [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
+				printf '%s\n' "${PWD##*/}" || basename "$(git rev-parse --show-toplevel)" # get repo name
+				git diff --quiet || echo ' -- dirty'                                      # check working tree
+				# only show dirty? alternately, uncomment to see clean
+				#else
+				#echo
+				# printf '%s\n' "${PWD##*/}"
+				# [[ -n $(git status -s) ]] || echo ' -- clean' # report clean state
 			fi
 		else
 			git rev-parse --git-dir &>/dev/null
@@ -81,42 +92,42 @@ function report_submodule_state() {
 
 # -- safely pushing a repo with submodules
 function ggsub_push() {
-  curr_wd="$PWD"
-  if has_submodules; then
-    report_submodule_state "$PWD"
-    echo -n "\n -- Continue push?  [Y/N]"
-    read -r REPLY
-    if [[ $REPLY =~ ^[Yy]$ ]]; then
-      cd "$curr_wd" || return
-      git push origin master
-    fi
-  else
-    cd "$curr_wd" || return
-    git push origin master
-  fi
-  cd "$curr_wd" || return
+	curr_wd="$PWD"
+	if has_submodules; then
+		report_submodule_state "$PWD"
+		echo -n "\n -- Continue push?  [Y/N]"
+		read -r REPLY
+		if [[ $REPLY =~ ^[Yy]$ ]]; then
+			cd "$curr_wd" || return
+			git push origin master
+		fi
+	else
+		cd "$curr_wd" || return
+		git push origin master
+	fi
+	cd "$curr_wd" || return
 }
 
 # -- checking status all repositories
 function report() {
-  curr_wd="$PWD"
-  report_submodule_state "$HOME/Repositories"
-  cd "$curr_wd" || return
+	curr_wd="$PWD"
+	report_submodule_state "$HOME/Repositories"
+	cd "$curr_wd" || return
 }
 
 function gg_commit() {
-  eval "git commit -m \"$*\""
+	eval "git commit -m \"$*\""
 }
 
 # -- removing files
 function gg_remove_file() {
-  git rm --cached "$1"
-  rm -rf "$1"
+	git rm --cached "$1"
+	rm -rf "$1"
 }
 
 # -- patch adding
 function gg_add_patch() {
-  git add --patch "$1"
+	git add --patch "$1"
 }
 
 # -- add submodule
