@@ -39,6 +39,7 @@ PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
 DOTFILES_LIST=$HOME/Repositories/dotfiles/resources/dotfiles.txt
 SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/resources/keys.txt
 
+FZF_ROOT=$HOME/Repositories
 NEOVIM_CONFIG_PATH=$HOME/.config/nvim
 DOTFILES_PATH=$HOME/Repositories/dotfiles
 LIST_OF_DOTFILES=$HOME/Repositories/dotfiles/res/dotfiles.txt
@@ -49,6 +50,8 @@ MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt-dotfiles
 TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
 ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
 
+export FZF_ROOT
+export LIST_OF_DOTFILES
 export BACKUP_PATH
 export ANTIGEN_CACHE_DIR
 export PRIVATE_DOTFILES_PATH
