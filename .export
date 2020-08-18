@@ -41,6 +41,7 @@ SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/resources/keys.txt
 
 NEOVIM_CONFIG_PATH=$HOME/.config/nvim
 DOTFILES_PATH=$HOME/Repositories/dotfiles
+LIST_OF_DOTFILES=$HOME/Repositories/dotfiles/res/dotfiles.txt
 ANTIGEN_PATH=$HOME/Repositories/dotfiles/resources/antigen
 ZSH_DOTFILES_PATH=$HOME/Repositories/dotfiles/zsh-dotfiles
 VIM_DOTFILES_PATH=$HOME/Repositories/dotfiles/vim-dotfiles
