@@ -18,7 +18,7 @@ function ffind-file() {
 	file=$(fd . "$REPOSITORIES" --type f --hidden --follow --exclude ".git" | fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :20 {}')
 
 	if [ -n "${file}" ]; then
-		vim "$file" </dev/tty # tell vim input is from terminal
+		nvim "$file" </dev/tty | vim "$file" </dev/tty # tell vim input is from terminal
 	fi
 	zle accept-line
 }
@@ -56,6 +56,8 @@ zle -N quick-exit               # define widget (from function)
 bindkey -M vicmd 'q' quick-exit # in vim cmd mode
 
 # -- (`) >> source .zshrc
+# todo: update
+# date: 2020-08-18 06:21
 BACKUP_DIR=$HOME/old
 DOTFILES_TARGET_DIR=$HOME/
 DOTFILES_SOURCE_DIR=$HOME/Repositories/dotfiles/
@@ -82,6 +84,7 @@ function quick-source() {
 
 	mkdir "$BACKUP_DIR" && backup-dotfiles
 	update-dotfiles
+	cp init.vim ~/.config/nvim
 	source $HOME/.zshrc &>/dev/null </dev/tty
 	zle accept-line
 }

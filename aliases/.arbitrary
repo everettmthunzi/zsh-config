@@ -2,6 +2,7 @@
 
 # -- viewing all aliases
 alias aliases="{ alias; git aliases; } | sort"
+alias vi=nvim
 
 # -- exporting older versions of java
 # alias java11='export JAVA_HOME=$JAVA_11_HOME'
@@ -19,6 +20,3 @@ alias cl='clear; exa --git-ignore --group-directories-first -la'
 
 # -- cleaning pesky .DS_Store files
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
-
-# -- cmake helper
-alias cxxmake='$HOME/Repositories/dotfiles/res/helpers/cmake.sh'

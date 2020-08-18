@@ -32,7 +32,15 @@ elif [[ "$OSTYPE" == "darwin"* ]]; then
 fi
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
-# dotfiles paths
+# dotfile environment vars
+BACKUP_PATH=$HOME/old_dotfiles
+ANTIGEN_CACHE_DIR=$HOME/.antigen
+PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
+DOTFILES_LIST=$HOME/Repositories/dotfiles/res/dotfiles.txt
+SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/res/keys.txt
+PRIVATE_DOTFILES_LIST=$HOME/Repositories/dotfiles/res/secure.txt
+
+NEOVIM_CONFIG_PATH=$HOME/.config/nvim
 DOTFILES_PATH=$HOME/Repositories/dotfiles
 ANTIGEN_PATH=$HOME/Repositories/dotfiles/res/antigen
 ZSH_DOTFILES_PATH=$HOME/Repositories/dotfiles/zsh-dotfiles
@@ -41,6 +49,12 @@ MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt
 TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
 ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
 
+export BACKUP_PATH
+export ANTIGEN_CACHE_DIR
+export PRIVATE_DOTFILES_PATH
+export DOTFILES_LIST
+export SECURITY_KEY_LIST
+export PRIVATE_DOTFILES_LIST
 export ANTIGEN_PATH
 export DOTFILES_PATH
 export ZSH_DOTFILES_PATH
@@ -48,19 +62,3 @@ export VIM_DOTFILES_PATH
 export MUTT_DOTFILES_PATH
 export TMUX_DOTFILES_PATH
 export ANTIGEN_DOTFILES_PATH
-
-# for install helper-script
-BACKUP_PATH=$HOME/old_dotfiles
-ANTIGEN_CACHE_DIR=$HOME/.antigen
-PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
-DOTFILES_LIST=$HOME/Repositories/dotfiles/res/dotfiles.txt
-SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/res/keys.txt
-PRIVATE_DOTFILES_LIST=$HOME/Repositories/dotfiles/res/secure.txt
-
-export BACKUP_PATH
-export ANTIGEN_CACHE_DIR
-export PRIVATE_DOTFILES_PATH
-export DOTFILES_LIST
-export SECURITY_KEY_LIST
-export PRIVATE_DOTFILES_LIST
-
