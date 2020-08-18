@@ -1,93 +1,98 @@
 #!/bin/zsh
 
-REPOSITORIES=$HOME/Repositories
+# helper functions ------------------------------------------------------------
 
-# -- vim-like keys binds
-bindkey -M menuselect 'h' vi-backward-char
-bindkey -M menuselect 'k' vi-up-line-or-history
-bindkey -M menuselect 'l' vi-forward-char
-bindkey -M menuselect 'j' vi-down-line-or-history
-
-# CTRL-E >> terminal-vim editing
-autoload edit-command-line
-zle -N edit-command-line
-bindkey '^e' edit-command-line
-
-# ([) >> fzf find + vim-open
-function ffind-file() {
-	file=$(fd . "$REPOSITORIES" --type f --hidden --follow --exclude ".git" | fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :20 {}')
-
-	if [ -n "${file}" ]; then
-		nvim "$file" </dev/tty || vim "$file" </dev/tty # tell vim input is from terminal
+function backup_dotfiles() {
+	if [ -d "$BACKUP_PATH/" ]; then
+		rm -Rf "$BACKUP_PATH/"
 	fi
-	zle accept-line
-}
-zle -N ffind-file                # define widget (from function)
-bindkey -M viins "\[" ffind-file # in vim ins mode
-bindkey -M vicmd "\[" ffind-file # in vim cmd mode
 
-# (]) >> fzf dir find + open
-function ffind-dir() {
-	local dir
-	dir=$(fd . "$REPOSITORIES" --type d --hidden --follow --exclude ".git" | fzf +m) && cd "$dir" || return
-	zle accept-line
-}
-zle -N ffind-dir                # define widget (from function)
-bindkey -M viins "\]" ffind-dir # in vim ins mode
-bindkey -M vicmd "\]" ffind-dir # in vim cmd mode
+	mkdir "$BACKUP_PATH/"
 
-# (*) >> fzf grep in a directory
-function fif() {
-	if [ ! "$#" -gt 0 ]; then
-		echo "Need a string to search for!"
-		return 1
-	fi
-	rg --files-with-matches --no-messages "$1" | fzf --preview "highlight -O ansi -l {} 2> /dev/null | rg --colors 'match:bg:yellow' --ignore-case --pretty --context 10 '$1' || rg --ignore-case --pretty --context 10 '$1' {}"
-}
-zle -N fif                # define widget (from function)
-bindkey -M vicmd "\*" fif # in vim cmd mode
-
-# -- (q) >> exit terminal
-function quick-exit() {
-	exit
-	zle accept-line
-}
-zle -N quick-exit               # define widget (from function)
-bindkey -M vicmd 'q' quick-exit # in vim cmd mode
-
-# -- (`) >> source .zshrc
-# todo: update
-# date: 2020-08-18 06:21
-BACKUP_DIR=$HOME/old
-DOTFILES_TARGET_DIR=$HOME/
-DOTFILES_SOURCE_DIR=$HOME/Repositories/dotfiles/
-DOTFILES=$HOME/Repositories/dotfiles/res/dotfiles.txt
-
-function backup-dotfiles() {
-	if ! tr <"$DOTFILES" ' ' _ | xargs -n1 -I {} mv "$DOTFILES_TARGET_DIR"{} "$BACKUP_DIR"; then
+	if ! tr <"$LIST_OF_DOTFILES" ' ' _ |
+		xargs -n1 -I {} mv "$HOME/"{} "$BACKUP_PATH/"; then
 		printf "\n-- backing up current dotfiles failed! \n"
 	fi
 }
 
-function update-dotfiles() {
-	if tr <"$DOTFILES" ' ' _ | xargs -n1 -I {} cp -R "$DOTFILES_SOURCE_DIR"{} "$DOTFILES_TARGET_DIR"; then
-		printf "-- dotfiles update successful"
+function update_dotfiles() {
+	if tr <"$LIST_OF_DOTFILES" ' ' _ |
+		xargs -n1 -I {} cp -R "$DOTFILES_PATH/"{} "$HOME/"; then
 	else
-		printf "-- dotfiles update failed!"
+		printf "-- dotfiles update failed! \n"
 	fi
+	cp $DOTFILES_PATH/init.vim $NEOVIM_CONFIG_PATH
 }
 
-function quick-source() {
-	if [ -d "$BACKUP_DIR" ]; then
-		rm -Rf "$BACKUP_DIR"
-	fi
+# defining function widgets ---------------------------------------------------
 
-	mkdir "$BACKUP_DIR" && backup-dotfiles
-	update-dotfiles
-	cp init.vim ~/.config/nvim
-	source $HOME/.zshrc &>/dev/null </dev/tty
+# source_dotfiles widget
+function source_dotfiles() {
+	if backup_dotfiles && update_dotfiles; then
+		source $HOME/.zshrc &>/dev/null </dev/tty
+	fi
 	zle accept-line
 }
-zle -N quick-source                # define widget (from function)
-bindkey -M viins "\`" quick-source # in vim ins mode
-bindkey -M vicmd "\`" quick-source # in vim cmd mode
+zle -N source_dotfiles
+
+# ffind widget (for fuzzy finding files)
+function ffind() {
+	file=$(
+		fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" |
+			fzf --height 25
+		--preview 'bat --style=numbers --color=always --line-range :20 {}'
+	)
+
+	if [ -n "${file}" ]; then
+		nvim "$file" </dev/tty ||
+			vim "$file" </dev/tty
+	fi
+	zle accept-line
+}
+zle -N ffind
+
+# ffind widget (for fuzzy finding directories)
+function dfind() {
+	local dir
+	dir=$(fd . "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
+		fzf +m) && cd "$dir" || return
+	zle accept-line
+}
+zle -N dfind
+
+# exit terminal widget
+function exit_terminal() {
+	exit
+	zle accept-line
+}
+zle -N exit_terminal
+
+# fetch mail widget
+function fetch_main {
+    neomutt
+	zle accept-line
+}
+zle -N fetch_main
+
+# key mapping function widgets ------------------------------------------------
+
+# exit terminal using [q]: normal mode
+bindkey -M vicmd 'q' exit_terminal # in vim cmd mode
+
+# source dotfiles using [`]: normal & in insert modes
+bindkey -M viins "\`" source_dotfiles
+bindkey -M vicmd "\`" source_dotfiles
+
+# fuzzy find and open a file using [[]: normal & in insert modes
+bindkey -M viins "\[" ffind
+bindkey -M vicmd "\[" ffind
+
+# fuzzy find and cd into a directory using []]: normal & in insert modes
+bindkey -M viins "\]" dfind
+bindkey -M vicmd "\]" dfind
+
+# Vim key movement
+bindkey -M menuselect 'h' vi-backward-char
+bindkey -M menuselect 'k' vi-up-line-or-history
+bindkey -M menuselect 'l' vi-forward-char
+bindkey -M menuselect 'j' vi-down-line-or-history
