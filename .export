@@ -50,6 +50,7 @@ MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt-dotfiles
 TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
 ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
 
+export NEOVIM_CONFIG_PATH
 export FZF_ROOT
 export LIST_OF_DOTFILES
 export BACKUP_PATH
