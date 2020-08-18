@@ -18,7 +18,7 @@ function ffind-file() {
 	file=$(fd . "$REPOSITORIES" --type f --hidden --follow --exclude ".git" | fzf --height 25 --preview 'bat --style=numbers --color=always --line-range :20 {}')
 
 	if [ -n "${file}" ]; then
-		nvim "$file" </dev/tty | vim "$file" </dev/tty # tell vim input is from terminal
+		nvim "$file" </dev/tty || vim "$file" </dev/tty # tell vim input is from terminal
 	fi
 	zle accept-line
 }
