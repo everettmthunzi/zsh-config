@@ -67,12 +67,6 @@ function exit_terminal() {
 }
 zle -N exit_terminal
 
-# fetch mail widget
-function fetch_main {
-    neomutt
-	zle accept-line
-}
-zle -N fetch_main
 
 # key mapping function widgets ------------------------------------------------
 
