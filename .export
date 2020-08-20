@@ -36,8 +36,6 @@ export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 BACKUP_PATH=$HOME/old_dotfiles
 ANTIGEN_CACHE_DIR=$HOME/.antigen
 PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
-# todo: remove double definition
-# date: 2020-08-20 10:26
 DOTFILES_LIST=$HOME/Repositories/dotfiles/resources/other/dotfiles.txt
 SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/resources/other/keys.txt
 
@@ -50,9 +48,6 @@ VIM_DOTFILES_PATH=$HOME/Repositories/dotfiles/vim-dotfiles
 MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt-dotfiles
 TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
 ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
-# todo: remove double definition
-# date: 2020-08-20 10:26
-LIST_OF_DOTFILES=$HOME/Repositories/dotfiles/resources/other/dotfiles.txt
 
 export NEOVIM_CONFIG_PATH
 export FZF_ROOT
