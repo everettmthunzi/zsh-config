@@ -9,14 +9,14 @@ function backup_dotfiles() {
 
 	mkdir "$BACKUP_PATH/"
 
-	if ! tr <"$LIST_OF_DOTFILES" ' ' _ |
+	if ! tr <"DOTFILES_LIST" ' ' _ |
 		xargs -n1 -I {} mv "$HOME/"{} "$BACKUP_PATH/"; then
 		printf "\n-- backing up current dotfiles failed! \n"
 	fi
 }
 
 function update_dotfiles() {
-	if tr <"$LIST_OF_DOTFILES" ' ' _ |
+	if tr <"DOTFILES_LIST" ' ' _ |
 		xargs -n1 -I {} cp -R "$DOTFILES_PATH/"{} "$HOME/"; then
 	else
 		printf "-- dotfiles update failed! \n"
