@@ -1,4 +1,6 @@
 #!/bin/zsh
 
 ## cloud compare
-alias cc='cloudcompare.CloudCompare'
+alias cloudc='cloudcompare.CloudCompare'
+alias conn='hotspotshield connect'
+alias disc='hotspotshield disconnect'
