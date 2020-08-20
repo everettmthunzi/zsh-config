@@ -2,15 +2,12 @@
 
 #### Usage
 
-###### VERY IMPORTANT:
-######   Make sure you update all path variables
-######   in zsh-dotfiles/.export to point to the
-######   correct paths first. I keep these dotfiles
-######   under:
-
+###### IMPORTANT:
+Make sure to update all relevant path variables in `zsh-dotfiles/.export` to
+point to the correct paths first. I keep these dotfiles under
 ```bash
-# todo: update!
-$HOME/Repositories/dotfiles/
+vi .export
+# update all relavant paths based on your $pwd
 ```
 
 then, in your `.zshrc` simply add:
