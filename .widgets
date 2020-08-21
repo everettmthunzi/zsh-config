@@ -9,14 +9,14 @@ function backup_dotfiles() {
 
 	mkdir "$BACKUP_PATH/"
 
-	if ! tr <"DOTFILES_LIST" ' ' _ |
+	if ! tr <"$DOTFILES_LIST" ' ' _ |
 		xargs -n1 -I {} mv "$HOME/"{} "$BACKUP_PATH/"; then
 		printf "\n-- backing up current dotfiles failed! \n"
 	fi
 }
 
 function update_dotfiles() {
-	if tr <"DOTFILES_LIST" ' ' _ |
+	if tr <"$DOTFILES_LIST" ' ' _ |
 		xargs -n1 -I {} cp -R "$DOTFILES_PATH/"{} "$HOME/"; then
 	else
 		printf "-- dotfiles update failed! \n"
@@ -38,9 +38,9 @@ zle -N source_dotfiles
 # ffind widget (for fuzzy finding files)
 function ffind() {
 	file=$(
-		fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" |
-			fzf --height 25
-		--preview 'bat --style=numbers --color=always --line-range :20 {}'
+		fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
+			--height 25 \
+			--preview 'bat --style=numbers --color=always --line-range :20 {}'
 	)
 
 	if [ -n "${file}" ]; then
@@ -70,6 +70,7 @@ zle -N exit_terminal
 autoload edit-command-line
 zle -N edit-command-line
 
+
 # key mapping function widgets ------------------------------------------------
 
 # exit terminal using [q]: normal mode
@@ -90,7 +91,7 @@ bindkey -M vicmd "\]" dfind
 # open terminal with [CTRL-e]
 bindkey '^e' edit-command-line
 
-# Vim key movement
+# VIM movement keys
 bindkey -M menuselect 'h' vi-backward-char
 bindkey -M menuselect 'k' vi-up-line-or-history
 bindkey -M menuselect 'l' vi-forward-char
