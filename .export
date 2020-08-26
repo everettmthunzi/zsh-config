@@ -19,26 +19,23 @@ export TERM="xterm-256color"
 
 # vim: persisting in linux-gnu environments
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    export EDITOR=/usr/bin/vim
-    export VISUAL=/usr/bin/vim
+	export EDITOR=/usr/bin/vim
+	export VISUAL=/usr/bin/vim
 fi
 
-# fzf:
 export FZF_BASE="$HOME/.fzf"
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
+	# fzf default command on ubuntu
+	export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-    # also:
-    #     brew install and use
-    # and make sure:
-    #     we use mainline clang
-    #     through exporting the relevant vars
-    export AR=/usr/local/opt/llvm/bin/llvm-ar
-    export LD=/usr/local/opt/llvm/bin/llvm-ld
-    export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-    export CPPFLAGS="-I/usr/local/opt/llvm/include"
-    export PATH="/usr/local/opt/llvm/bin:$PATH"
+	# fzf default command on mac
+	export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+	# enforce mainline clang on macOS
+	export AR=/usr/local/opt/llvm/bin/llvm-ar
+	export LD=/usr/local/opt/llvm/bin/llvm-ld
+	export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+	export CPPFLAGS="-I/usr/local/opt/llvm/include"
+	export PATH="/usr/local/opt/llvm/bin:$PATH"
 fi
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
