@@ -19,56 +19,61 @@ export TERM="xterm-256color"
 
 # vim: persisting in linux-gnu environments
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	export EDITOR=/usr/bin/vim
-	export VISUAL=/usr/bin/vim
+    export EDITOR=/usr/bin/vim
+    export VISUAL=/usr/bin/vim
 fi
 
 export FZF_BASE="$HOME/.fzf"
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	# fzf default command on ubuntu
-	export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
+    # fzf default command on ubuntu
+    export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-	# fzf default command on mac
-	export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
-	# enforce mainline clang on macOS
-	export AR=/usr/local/opt/llvm/bin/llvm-ar
-	export LD=/usr/local/opt/llvm/bin/llvm-ld
-	export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-	export CPPFLAGS="-I/usr/local/opt/llvm/include"
-	export PATH="/usr/local/opt/llvm/bin:$PATH"
+    # fzf default command on mac
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    # enforce mainline clang on macOS
+    export AR=/usr/local/opt/llvm/bin/llvm-ar
+    export LD=/usr/local/opt/llvm/bin/llvm-ld
+    export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+    export CPPFLAGS="-I/usr/local/opt/llvm/include"
+    export PATH="/usr/local/opt/llvm/bin:$PATH"
 fi
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
-# dotfile environment vars
-BACKUP_PATH=$HOME/old_dotfiles
-ANTIGEN_CACHE_DIR=$HOME/.antigen
-PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
+# DOTFILE VAR DEFINITION:
+
 DOTFILES_LIST=$HOME/Repositories/dotfiles/resources/other/dotfiles.txt
-SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/resources/other/keys.txt
-
-FZF_ROOT=$HOME/Repositories
-NEOVIM_CONFIG_PATH=$HOME/.config/nvim
 DOTFILES_PATH=$HOME/Repositories/dotfiles
-ANTIGEN_PATH=$HOME/Repositories/dotfiles/resources/external/antigen
-ZSH_DOTFILES_PATH=$HOME/Repositories/dotfiles/zsh-dotfiles
-VIM_DOTFILES_PATH=$HOME/Repositories/dotfiles/vim-dotfiles
-MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt-dotfiles
-TMUX_DOTFILES_PATH=$HOME/Repositories/dotfiles/tmux
-ANTIGEN_DOTFILES_PATH=$HOME/Repositories/dotfiles/antigen-dotfiles
-
-export NEOVIM_CONFIG_PATH
-export FZF_ROOT
-export LIST_OF_DOTFILES
-export BACKUP_PATH
-export ANTIGEN_CACHE_DIR
-export PRIVATE_DOTFILES_PATH
-export DOTFILES_LIST
-export SECURITY_KEY_LIST
-export PRIVATE_DOTFILES_LIST
-export ANTIGEN_PATH
 export DOTFILES_PATH
-export ZSH_DOTFILES_PATH
+export DOTFILES_LIST
+# TODO:
+export LIST_OF_DOTFILES
+
+SECURITY_KEY_LIST=$HOME/Repositories/dotfiles/resources/other/keys.txt
+export SECURITY_KEY_LIST
+
+ANTIGEN_PATH=$HOME/Repositories/dotfiles/resources/external/antigen
+ANTIGEN_CACHE_DIR=$HOME/.antigen
+export ANTIGEN_CACHE_DIR
+export ANTIGEN_PATH
+
+VIM_DOTFILES_PATH=$HOME/Repositories/dotfiles/vim
+NEOVIM_CONFIG_PATH=$HOME/.config/nvim
+export NEOVIM_CONFIG_PATH
 export VIM_DOTFILES_PATH
+
+MUTT_DOTFILES_PATH=$HOME/Repositories/dotfiles/mutt
 export MUTT_DOTFILES_PATH
-export TMUX_DOTFILES_PATH
-export ANTIGEN_DOTFILES_PATH
+
+ZSH_DOTFILES_PATH=$HOME/Repositories/dotfiles/zsh
+export ZSH_DOTFILES_PATH
+
+PRIVATE_DOTFILES_PATH=$HOME/Dropbox/config/
+export PRIVATE_DOTFILES_PATH
+export PRIVATE_DOTFILES_LIST
+
+BACKUP_PATH=$HOME/old_dotfiles
+export BACKUP_PATH
+
+#TODO: update
+FZF_ROOT=$HOME/Repositories
+export FZF_ROOT

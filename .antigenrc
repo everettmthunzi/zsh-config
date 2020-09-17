@@ -1,0 +1,23 @@
+#!/bin/zsh
+
+# zsh
+antigen use oh-my-zsh
+
+# packages
+antigen bundle git
+antigen bundle git-flow
+antigen bundle rimraf/k
+antigen bundle unixorn/git-extra-commands
+antigen bundle autojump
+antigen bundle zsh-users/zsh-completions
+antigen bundle zsh-users/zsh-autosuggestions
+antigen bundle pip
+antigen bundle lein
+antigen bundle vi-mode
+antigen bundle command-not-found
+antigen bundle zsh-users/zsh-syntax-highlighting
+
+# custom theme config
+source $ZSH_DOTFILES_PATH/.theme
+
+antigen apply
