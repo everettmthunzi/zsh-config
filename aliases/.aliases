@@ -1,7 +1,3 @@
 #!/bin/zsh
-
-source $HOME/Repositories/dotfiles/zsh-dotfiles/aliases/.apps
 source $HOME/Repositories/dotfiles/zsh-dotfiles/aliases/.ggit
-source $HOME/Repositories/dotfiles/zsh-dotfiles/aliases/.latex
 source $HOME/Repositories/dotfiles/zsh-dotfiles/aliases/.arbitrary
-
