@@ -1,22 +1,31 @@
 #!/bin/zsh
 
-# -- viewing all aliases
+# show * aliases
 alias aliases="{ alias; git aliases; } | sort"
-alias vi=nvim
 
-# -- exporting older versions of java
-# alias java11='export JAVA_HOME=$JAVA_11_HOME'
-
-# -- fd = fdfind in Debian-based Linux distributions
-# -- safely using fd cross platform
-if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	alias fd=fdfind
-fi
-
-# -- listing current working directory
-alias clr='clear'
-alias ls='exa --git-ignore --group-directories-first -la'
+# clear
 alias cl='clear; exa --git-ignore --group-directories-first -la'
 
 # -- cleaning pesky .DS_Store files
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
+
+# exa
+alias ls='exa --git-ignore --group-directories-first -la'
+
+# fd persistent on MacOS and Debian
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+	alias fd=fdfind
+fi
+
+# cloud compare
+alias cloudc='cloudcompare.CloudCompare'
+
+# hotspotshield
+alias disc='hotspotshield disconnect'
+alias conn='hotspotshield connect'
+
+# nvim
+alias vi=nvim
+
+# tree
+alias t=tree
