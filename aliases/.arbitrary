@@ -6,11 +6,11 @@ alias aliases="{ alias; git aliases; } | sort"
 # clear
 alias cl='clear; exa --git-ignore --group-directories-first -la'
 
-# -- cleaning pesky .DS_Store files
+# clean pesky .DS_Store
 alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 
 # exa
-alias ls='exa --git-ignore --group-directories-first -la'
+alias l='exa --git-ignore --group-directories-first -la'
 
 # fd persistent on MacOS and Debian
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
@@ -22,7 +22,7 @@ alias cloudc='cloudcompare.CloudCompare'
 
 # hotspotshield
 alias disc='hotspotshield disconnect'
-alias conn='hotspotshield connect'
+alias conn='hotspotshield connect US'
 
 # nvim
 alias vi=nvim
