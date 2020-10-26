@@ -1,3 +1,0 @@
-#!/bin/zsh
-source $ZSH_DOTFILES_PATH/aliases/.ggit
-source $ZSH_DOTFILES_PATH/aliases/.arbitrary

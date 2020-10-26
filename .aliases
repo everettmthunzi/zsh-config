@@ -1,5 +1,4 @@
 #!/bin/zsh
-
 # show * aliases
 alias aliases="{ alias; git aliases; } | sort"
 
@@ -29,3 +28,7 @@ alias vi=nvim
 
 # tree
 alias t=tree
+
+# compile latex documents
+alias tex='ctex.sh -j 10'
+
