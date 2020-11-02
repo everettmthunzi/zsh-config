@@ -71,22 +71,20 @@ autoload edit-command-line
 zle -N edit-command-line
 
 
-# key mapping function widgets ------------------------------------------------
+# MAPPING WIDGETS: ------------------------------------------------------------
 
 # exit terminal using [q]: normal mode
 bindkey -M vicmd 'q' exit_terminal # in vim cmd mode
 
-# source dotfiles using [`]: normal & in insert modes
+# source dotfiles using [`] in normal & insert mode
 bindkey -M viins "\`" source_dotfiles
 bindkey -M vicmd "\`" source_dotfiles
 
-# fuzzy find and open a file using [[]: normal & in insert modes
-bindkey -M viins "\[" ffind
-bindkey -M vicmd "\[" ffind
+# fuzzy find open a file using ['] in insert mode
+bindkey -M vicmd "'" ffind
 
-# fuzzy find and cd into a directory using []]: normal & in insert modes
-bindkey -M viins "\]" dfind
-bindkey -M vicmd "\]" dfind
+# fuzzy find and cd using [;] in insert mode
+bindkey -M vicmd ";" dfind
 
 # open terminal with [CTRL-e]
 bindkey '^e' edit-command-line
