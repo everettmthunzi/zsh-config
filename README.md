@@ -1,5 +1,13 @@
 # zsh dotfiles
 
+Feel free to copy any bits you may find useful to you.
+
+#### Screen cast
+
+`Comming soon!`
+   👏🍻🍻
+
+ <!---
 #### Usage
 ```bash
 # first edit the .export file and make sure it
@@ -20,9 +28,4 @@ echo "source $ZSH_DOTFILES_PATH/aliases/.aliases" >> ~/.zshrc
 ```
 
 #### Recommendation
-Shamelessly only copy the bits you find useful to you.
-
-#### Screen cast
-
-`Comming soon!`
-   👏🍻🍻
+ -->
