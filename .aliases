@@ -30,5 +30,7 @@ alias vi=nvim
 alias t=tree
 
 # compile latex documents
-alias tex='ctex.sh -j 10'
+alias tex='ctex.sh -j10'
 
+# reseting antigen
+alias ar='antigen reset'
