@@ -1,143 +1,225 @@
 #!/bin/zsh
-# theme
-antigen theme romkatv/powerlevel10k
 
-# powerlevel10k instant prompt.
+# .theme:
+#     A custome theme based on the POWERLEVEL10K
+# author: Everett
+# created: 2020-11-04 14:35
+# Github: https://github.com/antiqueeverett/
+
+antigen theme romkatv/powerlevel10k
 if [[ -r "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh" ]]; then
   source "${XDG_CACHE_HOME:-$HOME/.cache}/p10k-instant-prompt-${(%):-%n}.zsh"
 fi
 
-# source
-POWERLEVEL9K_INSTALLATION_PATH="$DOTFILES_PATH/resources/external/powerlevel10k"
+() {
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  # CONFIGURATION:
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  emulate -L zsh -o extended_glob
+  autoload -Uz is-at-least && is-at-least 5.1 || return
+  unset -m '(POWERLEVEL9K_*|DEFAULT_USER)~POWERLEVEL9K_GITSTATUS_DIR'
 
-# mode
-POWERLEVEL9K_MODE='nerdfont-complete'
-# ----------------------------------------------------------------
-# COLOR based on <https://github.com/morhetz/gruvbox#dark-mode-1>
-# ----------------------------------------------------------------
+  # font
+  typeset -g POWERLEVEL9K_MODE=nerdfont-complete
+  typeset -g POWERLEVEL9K_ICON_PADDING=moderate
 
-# /etc/ icon
-POWERLEVEL9K_ETC_ICON=
-POWERLEVEL9K_DIR_ETC_FOREROUND='202'
-POWERLEVEL9K_DIR_ETC_BACKGROUND='clear'
+  # set icons before content on both sides
+  typeset -g POWERLEVEL9K_ICON_BEFORE_CONTENT=true
 
-# root icon
-POWERLEVEL9K_FOLDER_ICON=''
-POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='202'
-POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='clear'
+  # new empty line before prompt
+  typeset -g POWERLEVEL9K_PROMPT_ADD_NEWLINE=false
 
-# home|user icon
-POWERLEVEL9K_HOME_ICON="%F{202}\uf02c " # '狀'
-POWERLEVEL9K_HOME_ICON_BACKGROUND='clear'
+  # connect left and right prompt using
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_PREFIX=
+  typeset -g POWERLEVEL9K_MULTILINE_FIRST_PROMPT_SUFFIX=
+  typeset -g POWERLEVEL9K_MULTILINE_NEWLINE_PROMPT_SUFFIX=
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_SUFFIX=
 
-# user|directory icon
-POWERLEVEL9K_HOME_SUB_ICON=
-POWERLEVEL9K_DIR_HOME_BACKGROUND='clear'
-
-# leading tilde
-POWERLEVEL9K_HOME_FOLDER_ABBREVIATION=''
-
-# directory path delimiter
-POWERLEVEL9K_DIR_PATH_SEPARATOR='-- '
-POWERLEVEL9K_SHORTEN_DELIMITER="%F{239} \uf0c5 " # ' '
-
-# home, user, tilder, delimiter colors
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='000'
-POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='202'
-
-# forbidden directory lock icon
-POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_FOREGROUND='202'
-POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND='clear'
-
-# next line connecting icon
-POWERLEVEL9K_MULTILINE_FIRST_PROMPT_PREFIX=''
-
-# cursor
-POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{239}\u "
+  # end left and right prompt segments using
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_LAST_SEGMENT_END_SYMBOL=
 
 
-# directory path and subversion segment delimiter
-POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=' -- '
+  # directory hyperlink
+  typeset -g POWERLEVEL9K_DIR_HYPERLINK=false
+
+  # ????
+  typeset -g POWERLEVEL9K_SHOW_CHANGESET=true
+  typeset -g POWERLEVEL9K_CHANGESET_HASH_LENGTH=6
+
+  # transient prompt
+  typeset -g POWERLEVEL9K_TRANSIENT_PROMPT=always
+  typeset -g POWERLEVEL9K_INSTANT_PROMPT=verbose
 
 
-# delimeter;
-POWERLEVEL9K_SHORTEN_DELIMITER='  '
-POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  # LEFT PROMPT SEGMENTS:
+  # >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>
+  typeset -g POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir vcs)
 
-# git icon
-POWERLEVEL9K_VCS_GIT_ICON=' '
+  # general aesthetic
+  typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SUBSEGMENT_SEPARATOR=' '  # separate segments with a space
+  # typeset -g POWERLEVEL9K_BACKGROUND=                            # transparent background
+  # typeset -g POWERLEVEL9K_{LEFT,RIGHT}_{LEFT,RIGHT}_WHITESPACE=  # no surrounding whitespace
+  # typeset -g POWERLEVEL9K_{LEFT,RIGHT}_SEGMENT_SEPARATOR=        # no end-of-line symbol
 
-# github icon
-POWERLEVEL9K_VCS_GIT_GITHUB_ICON=' '
+  # prompt prefix 
+  typeset -g POWERLEVEL9K_PROMPT_ON_NEWLINE=true
+  typeset -g POWERLEVEL9K_MULTILINE_LAST_PROMPT_PREFIX="%F{243}\uf120 "
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIINS_CONTENT_EXPANSION=''
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OK_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=243    # pass
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_ERROR_{VIINS,VICMD,VIVIS,VIOWR}_FOREGROUND=124 # fail
 
-# git SHA-1 hash
-POWERLEVEL9K_SHOW_CHANGESET=true
-POWERLEVEL9K_CHANGESET_HASH_LENGTH=6
+  # Prompt symbol in command vi mode.
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VICMD_CONTENT_EXPANSION='❮'
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIVIS_CONTENT_EXPANSION='V'
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_{OK,ERROR}_VIOWR_CONTENT_EXPANSION='▶'
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_OVERWRITE_STATE=true
 
-# git-state icons
-POWERLEVEL9K_VCS_BRANCH_ICON='  '
-POWERLEVEL9K_VCS_UNTRACKED_ICON=ﴕ
-POWERLEVEL9K_VCS_UNSTAGED_ICON=ﰗ
-POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=↓
-POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=↑
-POWERLEVEL9K_VCS_CLEAN_FOREGROUND='022'
-POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='52'
-POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='52'
-POWERLEVEL9K_VCS_CLEAN_BACKGROUND='clear'
-POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='clear'
-POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='clear'
+  # No line terminator if prompt_char is the last segment.
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_LEFT_PROMPT_LAST_SEGMENT_END_SYMBOL=''
 
-POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=-1
+  # No line introducer if prompt_char is the first segment.
+  typeset -g POWERLEVEL9K_PROMPT_CHAR_LEFT_PROMPT_FIRST_SEGMENT_START_SYMBOL=
 
-# exit status icon
-POWERLEVEL9K_STATUS_VERBOSE=false
-POWERLEVEL9K_STATUS_OK_ICON=
-POWERLEVEL9K_STATUS_ERROR_ICON=
-POWERLEVEL9K_STATUS_ERROR_CR_ICON=
-POWERLEVEL9K_STATUS_ERROR_BACKGROUND='clear'
-POWERLEVEL9K_STATUS_ERROR_FOREGROUND='88'
-POWERLEVEL9K_STATUS_OK_BACKGROUND='clear'
-POWERLEVEL9K_STATUS_OK_FOREGROUND='100'
-POWERLEVEL9K_STATUS_BACKGROUND='clear'
+  # shorten directory
+  typeset -g POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
 
-# execution time
-POWERLEVEL9K_EXECUTION_TIME_ICON=神
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=0
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='239'
-POWERLEVEL9K_COMMAND_BACKGROUND_JOBS_FOREGROUND='239'
-POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='clear'
-POWERLEVEL9K_COMMAND_BACKGROUND_JOBS_BACKGROUND='clear'
+  # /etc/ 
+  typeset -g POWERLEVEL9K_ETC_ICON=
+  typeset -g POWERLEVEL9K_DIR_ETC_FOREROUND='130'
+  typeset -g POWERLEVEL9K_DIR_ETC_BACKGROUND='clear'
 
-# load icon
-POWERLEVEL9K_LOAD_NORMAL_FOREGROUND='239'
-POWERLEVEL9K_LOAD_WARNING_FOREGROUND='172'
-POWERLEVEL9K_LOAD_CRITICAL_FOREGROUND='88'
-POWERLEVEL9K_LOAD_NORMAL_BACKGROUND='clear'
-POWERLEVEL9K_LOAD_WARNING_BACKGROUND='clear'
-POWERLEVEL9K_LOAD_CRITICAL_BACKGROUND='clear'
-POWERLEVEL9K_LOAD_NORMAL_VISUAL_IDENTIFIER_COLOR='239'
-POWERLEVEL9K_LOAD_WARNING_VISUAL_IDENTIFIER_COLOR='172'
-POWERLEVEL9K_LOAD_CRITICAL_VISUAL_IDENTIFIER_COLOR='88'
+  # root -
+  typeset -g POWERLEVEL9K_FOLDER_ICON=''
+  typeset -g POWERLEVEL9K_DIR_DEFAULT_FOREGROUND='130'
+  typeset -g POWERLEVEL9K_DIR_DEFAULT_BACKGROUND='clear'
 
-# nvm
-POWERLEVEL9K_NVM_FOREGROUND='239'
-POWERLEVEL9K_NVM_BACKGROUND='clear'
+  # home|user 狀
+  typeset -g POWERLEVEL9K_HOME_ICON="%F{130}\uf02c "
+  typeset -g POWERLEVEL9K_HOME_ICON_BACKGROUND='clear'
 
-# time icon
-POWERLEVEL9K_TIME_ICON=''
-POWERLEVEL9K_TIME_FOREGROUND='66'
-POWERLEVEL9K_TIME_BACKGROUND='clear'
+  # user|folder 
+  typeset -g POWERLEVEL9K_HOME_SUB_ICON=' '
+  typeset -g POWERLEVEL9K_DIR_HOME_BACKGROUND='clear'
 
-# >>> left segment >>>
-POWERLEVEL9K_PROMPT_ON_NEWLINE=true
-POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-remotebranch git-tagname)
-POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(dir custom_git_pair vcs)
+  # leading tilde -
+  typeset -g POWERLEVEL9K_HOME_FOLDER_ABBREVIATION=''
 
-# <<< right segment <<<
-POWERLEVEL9K_RIGHT_SEGMENT_SEPARATOR=''
-POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR="%F{239}\u|%F{239}"
-POWERLEVEL9K_TIME_FORMAT="%F{239}%D{%H:%M \uf455  %d.%m.%y}"
-POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time nvm dir_writable time load)
+  # directory path delimiter 
+  typeset -g POWERLEVEL9K_DIR_PATH_SEPARATOR='   '
+  typeset -g POWERLEVEL9K_SHORTEN_DELIMITER="%F{239} \uf0c50 "
 
-# color map oneliner
-# for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
+  # home, user, tilder, delimiter color
+  typeset -g POWERLEVEL9K_DIR_HOME_SUBFOLDER_FOREGROUND='000'
+  typeset -g POWERLEVEL9K_DIR_HOME_SUBFOLDER_BACKGROUND='130'
+
+  # forbidden directory lock icon
+  typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_FOREGROUND='000'
+  typeset -g POWERLEVEL9K_DIR_WRITABLE_FORBIDDEN_BACKGROUND='130'
+
+  # directory path and subversion segment delimiter ????
+  typeset -g POWERLEVEL9K_LEFT_SUBSEGMENT_SEPARATOR=' -- '
+
+  # nvm
+  typeset -g POWERLEVEL9K_NVM_FOREGROUND='239'
+  typeset -g POWERLEVEL9K_NVM_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_VCS_GIT_HOOKS=(vcs-detect-changes git-untracked git-aheadbehind git-remotebranch git-tagname)
+
+  # VCS:
+  typeset -g POWERLEVEL9K_VCS_GIT_ICON='  '
+  typeset -g POWERLEVEL9K_VCS_GIT_GITHUB_ICON='  '
+  typeset -g POWERLEVEL9K_VCS_BRANCH_ICON=' '
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_ICON=ﰗ
+  typeset -g POWERLEVEL9K_VCS_UNSTAGED_ICON=ﰖ
+  typeset -g POWERLEVEL9K_VCS_INCOMING_CHANGES_ICON=⇣
+  typeset -g POWERLEVEL9K_VCS_OUTGOING_CHANGES_ICON=⇡
+  typeset -g POWERLEVEL9K_VCS_CLEAN_FOREGROUND='034'
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_FOREGROUND='124'
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_FOREGROUND='124'
+  typeset -g POWERLEVEL9K_VCS_CLEAN_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_VCS_MODIFIED_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_VCS_UNTRACKED_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_VCS_{STAGED,UNSTAGED,UNTRACKED,CONFLICTED,COMMITS_AHEAD,COMMITS_BEHIND}_MAX_NUM=-1
+  typeset -g POWERLEVEL9K_VCS_BACKENDS=(git)
+  # typeset -g POWERLEVEL9K_VCS_VISUAL_IDENTIFIER_COLOR=76
+  # typeset -g POWERLEVEL9K_VCS_LOADING_VISUAL_IDENTIFIER_COLOR=244
+  # typeset -g POWERLEVEL9K_VCS_MAX_INDEX_SIZE_DIRTY=-1
+
+  # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  # RIGHT PROMPT SEGMENTS:
+  # <<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<<
+  typeset -g POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(status command_execution_time nvm dir_writable time load public_ip)
+
+  # exit status
+  # typeset -g POWERLEVEL9K_STATUS_EXTENDED_STATES=true
+  # typeset -g POWERLEVEL9K_STATUS_VERBOSE=false
+  typeset -g POWERLEVEL9K_STATUS_OK=true
+  typeset -g POWERLEVEL9K_STATUS_OK_VISUAL_IDENTIFIER_EXPANSION=
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE=true
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_FOREGROUND='250'
+  typeset -g POWERLEVEL9K_STATUS_OK_PIPE_VISUAL_IDENTIFIER_EXPANSION=
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_FOREGROUND=160
+  typeset -g POWERLEVEL9K_STATUS_ERROR_PIPE_VISUAL_IDENTIFIER_EXPANSION=
+  typeset -g POWERLEVEL9K_STATUS_ERROR=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_VISUAL_IDENTIFIER_EXPANSION=
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL=true
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_FOREGROUND=160
+  typeset -g POWERLEVEL9K_STATUS_VERBOSE_SIGNAME=false
+  typeset -g POWERLEVEL9K_STATUS_ERROR_SIGNAL_VISUAL_IDENTIFIER_EXPANSION=
+
+  # segment separator
+  typeset -g POWERLEVEL9K_RIGHT_SUBSEGMENT_SEPARATOR="%F{250} |"
+
+  # # execution time
+  typeset -g POWERLEVEL9K_EXECUTION_TIME_ICON='神'
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_PRECISION=0
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FORMAT='d h m s'
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_THRESHOLD=3
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_FOREGROUND='250'
+  typeset -g POWERLEVEL9K_COMMAND_BACKGROUND_JOBS_FOREGROUND='250'
+  typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_COMMAND_BACKGROUND_JOBS_BACKGROUND='clear'
+  #typeset -g POWERLEVEL9K_COMMAND_EXECUTION_TIME_VISUAL_IDENTIFIER_EXPANSION=
+
+  # time
+  typeset -g POWERLEVEL9K_TIME_FOREGROUND='250'
+  typeset -g POWERLEVEL9K_TIME_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_TIME_UPDATE_ON_COMMAND=true
+  typeset -g POWERLEVEL9K_TIME_VISUAL_IDENTIFIER_EXPANSION=
+  typeset -g POWERLEVEL9K_TIME_FORMAT="%D{%H:%M \uf455  %d.%m.%y}"
+
+  # load
+  typeset -g POWERLEVEL9K_LOAD_NORMAL_VISUAL_IDENTIFIER_COLOR='250'
+  typeset -g POWERLEVEL9K_LOAD_WARNING_VISUAL_IDENTIFIER_COLOR='124'
+  typeset -g POWERLEVEL9K_LOAD_CRITICAL_VISUAL_IDENTIFIER_COLOR='124'
+  typeset -g POWERLEVEL9K_LOAD_NORMAL_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_LOAD_WARNING_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_LOAD_CRITICAL_BACKGROUND='clear'
+
+  # public
+  typeset -g POWERLEVEL9K_PUBLIC_IP_FOREGROUND='250'
+  typeset -g POWERLEVEL9K_PUBLIC_IP_BACKGROUND='clear'
+  typeset -g POWERLEVEL9K_PUBLIC_IP_VISUAL_IDENTIFIER_EXPANSION=' '
+
+  # # Todo color.
+  # typeset -g POWERLEVEL9K_TODO_FOREGROUND=110
+  # typeset -g POWERLEVEL9K_TODO_HIDE_ZERO_TOTAL=true
+  # typeset -g POWERLEVEL9K_TODO_HIDE_ZERO_FILTERED=false
+
+  # # privilege context
+  # typeset -g POWERLEVEL9K_CONTEXT_ROOT_FOREGROUND=178
+  # typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_FOREGROUND=180
+  # typeset -g POWERLEVEL9K_CONTEXT_FOREGROUND=180
+  # typeset -g POWERLEVEL9K_CONTEXT_ROOT_TEMPLATE='%B%n@%m'
+  # typeset -g POWERLEVEL9K_CONTEXT_{REMOTE,REMOTE_SUDO}_TEMPLATE='%n@%m'
+  # typeset -g POWERLEVEL9K_CONTEXT_TEMPLATE='%n@%m'
+
+  # # always show context (remove to set true)
+  # typeset -g POWERLEVEL9K_CONTEXT_{DEFAULT,SUDO}_{CONTENT,VISUAL_IDENTIFIER}_EXPANSION=
+
+}
+
+# color map oneliner: for i in {0..255}; do print -Pn "%K{$i}  %k%F{$i}${(l:3::0:)i}%f " ${${(M)$((i%6)):#3}:+$'\n'}; done
