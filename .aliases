@@ -30,7 +30,11 @@ alias vi=nvim
 alias t=tree
 
 # compile latex documents
-alias tex='ctex.sh -j10'
+alias tex='bash ctex.sh -j10'
+
+# gen & compile cmake projects
+alias gen-cmake='bash cmake-gen.sh'
+alias run-cmake='sudo bash cmake-run.sh -j10'
 
 # reseting antigen
 alias ar='antigen reset'
