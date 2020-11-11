@@ -10,6 +10,10 @@ if [ -d "$HOME/.local/bin" ] ; then
     PATH="$HOME/.local/bin:$PATH"
 fi
 
+# add dotfiles bin directory to the executable search PATH if it exists
+if [ -d "$HOME/dotfiles/bin" ] ; then
+    PATH="$HOME/dotfiles/bin:$PATH"
+fi
 
 # terminal:
 GPG_TTY=$(tty)
@@ -45,17 +49,14 @@ fi
 
 
 # FUZZY FIND CONFIG:
-#
 export FZF_BASE="$HOME/.fzf"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
     # fzf default for linux-gnu
-    #
     export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
     # fzf default for macOS
-    #
     export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 fi
 
@@ -63,7 +64,6 @@ export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
 
 # VAR DEFINITION:
-#
 DOTFILES_LIST=$HOME/dotfiles/resources/other/dotfiles.txt
 DOTFILES_PATH=$HOME/dotfiles
 export DOTFILES_PATH
