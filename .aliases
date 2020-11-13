@@ -29,12 +29,18 @@ alias vi=nvim
 # tree
 alias t=tree
 
-# compile latex documents
-# alias tex='ctex.sh -j10'
-
-# gen & compile cmake projects
-# alias gen-cmake='bash cmake-gen.sh'
-alias build='cmake.sh -j16'
-
 # reseting antigen
 alias ar='antigen reset'
+
+
+# BIN SCRIPT ALIASES:
+
+# library.bib update
+alias bib='bib.sh'
+
+# compile latex documents
+alias compile='tex.sh -j10'
+
+# build cmake project
+alias build='cmake.sh -j10'
+
