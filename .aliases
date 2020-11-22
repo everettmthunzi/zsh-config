@@ -33,14 +33,14 @@ alias t=tree
 alias ar='antigen reset'
 
 
-# BIN SCRIPT ALIASES:
-
+# SCRIPT ALIASES:
+#
 # library.bib update
 alias bib='bib.sh'
 
 # compile latex documents
-alias compile='tex.sh -j10'
+alias comp='time tex.sh main.tex -j12'
 
 # build cmake project
-alias build='cmake.sh -j10'
+alias build='cmake.sh -j12'
 

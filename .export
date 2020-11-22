@@ -11,8 +11,8 @@ if [ -d "$HOME/.local/bin" ] ; then
 fi
 
 # add dotfiles bin directory to the executable search PATH if it exists
-if [ -d "$HOME/dotfiles/bin" ] ; then
-    PATH="$HOME/dotfiles/bin:$PATH"
+if [ -d "$HOME/dotfiles/scripts" ] ; then
+    PATH="$HOME/dotfiles/scripts:$PATH"
 fi
 
 # terminal:
