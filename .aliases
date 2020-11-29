@@ -27,6 +27,7 @@ fi
 
 # regular paths
 alias dot='cd ~/dotfiles'
+alias desk='cd ~/Desktop'
 alias drop='cd ~/Dropbox'
 alias down='cd ~/Downloads'
 
