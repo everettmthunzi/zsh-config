@@ -1,5 +1,7 @@
 #!/bin/zsh
 
+cpus=$(getconf _NPROCESSORS_ONLN)
+
 ################################################################################
 #                               SYSTEM TWEAK                                   #
 ################################################################################
@@ -32,7 +34,9 @@ alias drop='cd ~/Dropbox'
 alias down='cd ~/Downloads'
 
 # cloud compare
-alias cloudc='cloudcompare.CloudCompare'
+alias cc='cloudcompare.CloudCompare'
+alias pcl='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/cloud.ply >/dev/null 2>&1 &'
+alias surface='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/plane.ply >/dev/null 2>&1 &'
 
 # hotspotshield
 alias disc='hotspotshield disconnect'
@@ -55,8 +59,8 @@ alias ar='antigen reset'
 alias bib='bib.sh'
 
 # compile latex documents
-alias comp='time tex.sh main.tex -j12'
+alias comp='time tex.sh main.tex -j$cpus'
 
 # build cmake project
-alias build='cmake.sh -j12'
+alias build='cmake.sh -j$cpus'
 
