@@ -34,9 +34,8 @@ alias drop='cd ~/Dropbox'
 alias down='cd ~/Downloads'
 
 # cloud compare
-alias cc='cloudcompare.CloudCompare'
-alias pcl='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/cloud.ply >/dev/null 2>&1 &'
-alias surface='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/plane.ply >/dev/null 2>&1 &'
+alias pcl='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/pcl.ply >/dev/null 2>&1 &'
+alias surface='cloudcompare.CloudCompare $HOME/Repositories/research/projects/sap/build/bin/surface.ply >/dev/null 2>&1 &'
 
 # hotspotshield
 alias disc='hotspotshield disconnect'
@@ -64,3 +63,8 @@ alias comp='time tex.sh main.tex -j$cpus'
 # build cmake project
 alias build='cmake.sh -j$cpus'
 
+# run clion
+alias clion='clion.sh & disown clion.sh'
+
+# update xmonad
+alias update-xmonad='xmonad-sync.sh'
