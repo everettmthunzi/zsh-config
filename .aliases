@@ -2,9 +2,9 @@
 
 cpus=$(getconf _NPROCESSORS_ONLN)
 
-################################################################################
-#                               SYSTEM TWEAK                                   #
-################################################################################
+################################################################
+#                        TWEAKS                                #
+################################################################
 
 # show * aliases
 alias aliases="{ alias; git aliases; } | sort"
@@ -19,40 +19,12 @@ alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
 alias l='exa --git-ignore --group-directories-first -la'
 # fd persistent on MacOS and Debian
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	alias fd=fdfind
+    alias fd=fdfind
 fi
 
-
-################################################################################
-#                               SHORTCUTS                                      #
-################################################################################
-
-# regular paths
-alias dot='cd ~/dotfiles'
-alias desk='cd ~/Desktop'
-alias drop='cd ~/Dropbox'
-alias down='cd ~/Downloads'
-
-# cloud compare
-alias pcl='cloudcompare.CloudCompare $HOME/Repositories/research/projects/registration/build/bin/pcl.ply >/dev/null 2>&1 &'
-alias surface='cloudcompare.CloudCompare $HOME/Repositories/research/projects/registration/build/bin/surface.ply >/dev/null 2>&1 &'
-
-# hotspotshield
-alias disc='hotspotshield disconnect'
-alias conn='hotspotshield connect US'
-
-# nvim
-alias vi=nvim
-
-# tree
-alias t=tree
-
-# reseting antigen
-alias ar='antigen reset'
-
-################################################################################
-#                              SCRIPT ALIASES                                  #
-################################################################################
+################################################################
+#                      SCRIPT ALIASES                          #
+################################################################
 
 # library.bib update
 alias bib='bib.sh'
@@ -68,3 +40,43 @@ alias clion='clion.sh & disown clion.sh'
 
 # update xmonad
 alias update-xmonad='xmonad-sync.sh'
+
+# update ultisnips
+alias update-ultisnips='snippets-sync.sh'
+
+
+################################################################
+#                          SHORTCUTS                           #
+################################################################
+
+# nvim
+alias vi=nvim
+
+
+# tree
+alias t=tree
+
+# reseting antigen
+alias ar='antigen reset'
+
+# regular paths
+alias dot='cd ~/dotfiles'
+alias desk='cd ~/Desktop'
+alias drop='cd ~/Dropbox'
+alias down='cd ~/Downloads'
+
+# hotspotshield
+alias disc='hotspotshield disconnect'
+alias conn='hotspotshield connect US'
+
+################################################################
+#                          temp                                #
+################################################################
+
+function surfacefiles() {
+    cloudcompare.CloudCompare $HOME/Repositories/research/projects/registration/build/surface.ply >/dev/null 2>&1 &
+    xdg-open $HOME/Repositories/research/projects/registration/build/surface.png >/dev/null 2>&1 &
+}
+
+alias surface='surfacefiles'
+
