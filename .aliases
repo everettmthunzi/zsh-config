@@ -33,7 +33,7 @@ alias bib='bib.sh'
 alias comp='time tex.sh main.tex -j$cpus'
 
 # build cmake project
-alias build='cmake.sh -j$cpus'
+alias build='time cmake.sh'
 
 # run clion
 alias clion='clion.sh & disown clion.sh'
@@ -74,8 +74,8 @@ alias conn='hotspotshield connect US'
 ################################################################
 
 function surfacefiles() {
-    cloudcompare.CloudCompare $HOME/Repositories/research/projects/registration/build/surface.ply >/dev/null 2>&1 &
-    xdg-open $HOME/Repositories/research/projects/registration/build/surface.png >/dev/null 2>&1 &
+    cloudcompare.CloudCompare $HOME/Repositories/research/projects/kinect/build/surface.ply >/dev/null 2>&1 &
+    xdg-open $HOME/Repositories/research/projects/kinect/build/surface.png >/dev/null 2>&1 &
 }
 
 alias surface='surfacefiles'
