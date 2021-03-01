@@ -2,9 +2,11 @@
 
 cpus=$(getconf _NPROCESSORS_ONLN)
 
-################################################################
-#                        TWEAKS                                #
-################################################################
+function exterminate() {
+    sudo find . -type f -name '*.DS_Store' -ls -delete
+    sudo find . -type f -name 'indent.log' -ls -delete
+}
+
 
 # show * aliases
 alias aliases="{ alias; git aliases; } | sort"
@@ -12,8 +14,8 @@ alias aliases="{ alias; git aliases; } | sort"
 # clear
 alias cl='clear; exa --git-ignore --group-directories-first -la'
 
-# clean pesky .DS_Store
-alias clean="sudo find . -type f -name '*.DS_Store' -ls -delete"
+# clean pesky files
+alias clean=exterminate
 
 # exa
 alias l='exa --git-ignore --group-directories-first -la'
@@ -72,6 +74,8 @@ alias conn='hotspotshield connect US'
 ################################################################
 #                          temp                                #
 ################################################################
+
+alias matlab='$HOME/MATLAB/R2018a/bin/matlab >/dev/null 2>&1 &'
 
 function surfacefiles() {
     cloudcompare.CloudCompare $HOME/Repositories/research/projects/kinect/build/surface.ply >/dev/null 2>&1 &
