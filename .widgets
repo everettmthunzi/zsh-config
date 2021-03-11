@@ -3,67 +3,95 @@
 # helper functions ------------------------------------------------------------
 
 function backup_dotfiles() {
-	if [ -d "$BACKUP_PATH/" ]; then
-		rm -Rf "$BACKUP_PATH/"
-	fi
+    if [ -d "$BACKUP_PATH/" ]; then
+        rm -Rf "$BACKUP_PATH/"
+    fi
 
-	mkdir "$BACKUP_PATH/"
+    mkdir "$BACKUP_PATH/"
 
-	if ! tr <"$DOTFILES_LIST" ' ' _ |
-		xargs -n1 -I {} mv "$HOME/"{} "$BACKUP_PATH/"; then
-		printf "\n-- backing up current dotfiles failed! \n"
-	fi
+    if ! tr <"$DOTFILES_LIST" ' ' _ |
+        xargs -n1 -I {} mv "$HOME/"{} "$BACKUP_PATH/"; then
+            printf "\n-- backing up current dotfiles failed! \n"
+    fi
 }
 
 function update_dotfiles() {
-	if tr <"$DOTFILES_LIST" ' ' _ |
-		xargs -n1 -I {} cp -R "$DOTFILES_PATH/"{} "$HOME/"; then
-	else
-		printf "-- dotfiles update failed! \n"
-	fi
-	cp $DOTFILES_PATH/init.vim $NEOVIM_CONFIG_PATH
+    if tr <"$DOTFILES_LIST" ' ' _ |
+        xargs -n1 -I {} cp -R "$DOTFILES_PATH/"{} "$HOME/"; then
+        else
+            printf "-- dotfiles update failed! \n"
+    fi
+    cp $DOTFILES_PATH/init.vim $NEOVIM_CONFIG_PATH
 }
 
 # defining function widgets ---------------------------------------------------
 
+
+
+
 # source_dotfiles widget
 function source_dotfiles() {
-	if backup_dotfiles && update_dotfiles; then
-		source $HOME/.zshrc &>/dev/null </dev/tty
-	fi
-	zle accept-line
+    if backup_dotfiles && update_dotfiles; then
+        source $HOME/.zshrc &>/dev/null </dev/tty
+    fi
+    zle accept-line
 }
 zle -N source_dotfiles
 
 # ffind widget (for fuzzy finding files)
 function ffind() {
-	file=$(
-		fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
-			--height 25 \
-			--preview 'bat --style=numbers --color=always --line-range :20 {}'
-	)
+    file=$(
+    fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
+        --height 25 \
+        --preview 'bat --style=numbers --color=always --line-range :20 {}'
+    )
 
-	if [ -n "${file}" ]; then
-		nvim "$file" </dev/tty ||
-			vim "$file" </dev/tty
-	fi
-	zle accept-line
+    if [ -n "${file}" ]; then
+        nvim "$file" </dev/tty ||
+            vim "$file" </dev/tty
+    fi
+    zle accept-line
 }
 zle -N ffind
 
-# ffind widget (for fuzzy finding directories)
-function dfind() {
-	local dir
-	dir=$(fd . "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
-		fzf +m) && cd "$dir" || return
-	zle accept-line
-}
-zle -N dfind
+# ffind widget (fuzzy find from home)
+function hfind() {
+    local dir
+    dir=$(fd . "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
+        fzf +m) && cd "$dir" || return
+            zle accept-line
+        }
+    zle -N hfind
+
+# ffind widget (fuzzy find from current git repository)
+function rroot() {
+    local dir
+    dir=$(fd --full-path "$(git rev-parse --show-toplevel 2>/dev/null)" "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
+        fzf +m) && cd "$dir" || return
+            zle accept-line
+        }
+
+    function gfind() {
+        gitproject="$(git rev-parse --show-toplevel 2>/dev/null)"
+        if [[ -z "${gitproject// }" ]]; then
+            echo "Woops! Not a git repo."
+        else
+            cd "$gitproject"
+            if [ ! -f .git ]; then
+                # overlook submodules
+                rroot
+            else
+                cd ../
+                rroot
+            fi
+        fi
+    }
+zle -N gfind
 
 # exit terminal widget
 function exit_terminal() {
-	exit
-	zle accept-line
+    exit
+    zle accept-line
 }
 zle -N exit_terminal
 
@@ -83,8 +111,11 @@ bindkey -M vicmd "\`" source_dotfiles
 # fuzzy find open a file using ['] in insert mode
 bindkey -M vicmd "'" ffind
 
-# fuzzy find and cd using [;] in insert mode
-bindkey -M vicmd ";" dfind
+# fuzzy find (from home directory) and cd using [;] in normal mode
+bindkey -M vicmd "/" hfind
+
+# fuzzy find (from current git repo) and cd using [/] in normal mode
+bindkey -M vicmd ";" gfind
 
 # open terminal with [CTRL-e]
 bindkey '^e' edit-command-line
