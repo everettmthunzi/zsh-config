@@ -41,7 +41,7 @@ zle -N source_dotfiles
 # ffind widget (for fuzzy finding files)
 function ffind() {
     file=$(
-    fd . "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
+    fd --full-path "$(git rev-parse --show-toplevel 2>/dev/null)"  "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
         --height 25 \
         --preview 'bat --style=numbers --color=always --line-range :20 {}'
     )
@@ -64,29 +64,14 @@ function hfind() {
     zle -N hfind
 
 # ffind widget (fuzzy find from current git repository)
-function rroot() {
+
+function gfind() {
     local dir
-    dir=$(fd --full-path "$(git rev-parse --show-toplevel 2>/dev/null)" "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
+    dir=$(fd --full-path "$(fuzzy.sh)" "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
         fzf +m) && cd "$dir" || return
             zle accept-line
         }
-
-    function gfind() {
-        gitproject="$(git rev-parse --show-toplevel 2>/dev/null)"
-        if [[ -z "${gitproject// }" ]]; then
-            echo "Woops! Not a git repo."
-        else
-            cd "$gitproject"
-            if [ ! -f .git ]; then
-                # overlook submodules
-                rroot
-            else
-                cd ../
-                rroot
-            fi
-        fi
-    }
-zle -N gfind
+    zle -N gfind
 
 # exit terminal widget
 function exit_terminal() {
