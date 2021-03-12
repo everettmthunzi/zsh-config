@@ -98,7 +98,3 @@ export BACKUP_PATH
 #TODO: update
 FZF_ROOT=$HOME
 export FZF_ROOT
-
-
-#ROS2
-source "/opt/ros/foxy/setup.zsh"
