@@ -1,20 +1,5 @@
 #!/bin/zsh
 
-# add Cabal's bin directory to the executable search PATH if it exists
-if [ -d "$HOME/.cabal/bin" ] ; then
-    PATH="$HOME/.cabal/bin:$PATH"
-fi
-
-# add Stack's bin directory to the executable search PATH if it exists
-if [ -d "$HOME/.local/bin" ] ; then
-    PATH="$HOME/.local/bin:$PATH"
-fi
-
-# add dotfiles bin directory to the executable search PATH if it exists
-if [ -d "$HOME/dotfiles/scripts" ] ; then
-    PATH="$HOME/dotfiles/scripts:$PATH"
-fi
-
 # terminal:
 GPG_TTY=$(tty)
 export GPG_TTY
@@ -32,36 +17,58 @@ export LC_ALL=en_US.UTF-8
 # colors:
 export TERM="xterm-256color"
 
-# persist vim in linux-gnu
+# persist .cabal bin
+if [ -d "$HOME/.cabal/bin" ]; then
+	export PATH="$HOME/.cabal/bin:$PATH"
+fi
+
+# persist .local bin
+if [ -d "$HOME/.local/bin" ]; then
+	export PATH="$HOME/.local/bin:$PATH"
+fi
+
+# persist custom scripts
+if [ -d "$HOME/dotfiles/scripts" ]; then
+	export PATH="$HOME/dotfiles/scripts:$PATH"
+fi
+
+# persist Vim in linux-gnu
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-    export EDITOR=/usr/bin/vim
-    export VISUAL=/usr/bin/vim
+	export EDITOR=/usr/bin/vim
+	export VISUAL=/usr/bin/vim
+fi
+
+# persist lib path in darwin
+if [[ "$OSTYPE" == "darwin"* ]]; then
+	export LIBRARY_PATH=/usr/local/lib
 fi
 
 # persist clang in darwin
 if [[ "$OSTYPE" == "darwin"* ]]; then
-    export AR=/usr/local/opt/llvm/bin/llvm-ar
-    export LD=/usr/local/opt/llvm/bin/llvm-ld
-    export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-    export CPPFLAGS="-I/usr/local/opt/llvm/include"
-    export PATH="/usr/local/opt/llvm/bin:$PATH"
+	export AR=/usr/local/opt/llvm/bin/llvm-ar
+	export LD=/usr/local/opt/llvm/bin/llvm-ld
+	export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+	export CPPFLAGS="-I/usr/local/opt/llvm/include"
+	export PATH="/usr/local/opt/llvm/bin:$PATH"
 fi
-
 
 # FUZZY FIND CONFIG:
 export FZF_BASE="$HOME/.fzf"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-    # fzf default for linux-gnu
-    export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
+	# fzf default for linux-gnu
+	export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-    # fzf default for macOS
-    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+	# fzf default for macOS
+	export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 fi
 
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
 
+#TODO: update
+FZF_ROOT=$HOME
+export FZF_ROOT
 
 # VAR DEFINITION:
 DOTFILES_LIST=$HOME/dotfiles/resources/other/dotfiles.txt
@@ -94,7 +101,3 @@ export PRIVATE_DOTFILES_LIST
 
 BACKUP_PATH=$HOME/old_dotfiles
 export BACKUP_PATH
-
-#TODO: update
-FZF_ROOT=$HOME
-export FZF_ROOT
