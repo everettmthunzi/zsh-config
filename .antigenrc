@@ -13,9 +13,9 @@ antigen bundle zsh-users/zsh-completions
 antigen bundle zsh-users/zsh-autosuggestions
 antigen bundle pip
 antigen bundle lein
-antigen bundle vi-mode
 antigen bundle command-not-found
 antigen bundle zsh-users/zsh-syntax-highlighting
+antigen bundle vi-mode
 
 # custom theme config
 source "$DOTFILES_PATH/p10k/p10k.zsh"
