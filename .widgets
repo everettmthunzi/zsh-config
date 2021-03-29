@@ -47,7 +47,8 @@ zle -N edit-command-line
 #    fzf find from home.
 function findhome() {
     local dir
-    dir=$(fd . "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return zle accept-line
+    dir=$(fd . "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return
+    zle accept-line
 }
 zle -N findhome
 bindkey -M vicmd "/" findhome
@@ -69,10 +70,12 @@ function findgit() {
 
         # iff not, run global search from home
         dir=$(fd . "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return
+        zle accept-line
     else
 
         # iff yes, constrain search to git repo
         dir=$(fd --full-path "$(fuzzy.sh)" "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return
+        zle accept-line
     fi
 
     # is dir valid?
