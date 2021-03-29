@@ -24,86 +24,121 @@ function update_dotfiles() {
     cp $DOTFILES_PATH/init.vim $NEOVIM_CONFIG_PATH
 }
 
-# defining function widgets ---------------------------------------------------
+#  # source_dotfiles widget
+#  function source_dotfiles() {
+#      if backup_dotfiles && update_dotfiles; then
+#          source $HOME/.zshrc &>/dev/null </dev/tty
+#      fi
+#      zle accept-line
+#  }
+#  zle -N source_dotfiles
+# source dotfiles using [`] in normal & insert mode
+# bindkey -M viins "\`" source_dotfiles
+# bindkey -M vicmd "\`" source_dotfiles
 
 
-
-
-# source_dotfiles widget
-function source_dotfiles() {
-    if backup_dotfiles && update_dotfiles; then
-        source $HOME/.zshrc &>/dev/null </dev/tty
-    fi
-    zle accept-line
-}
-zle -N source_dotfiles
-
-# ffind widget (for fuzzy finding files)
-function ffind() {
-    file=$(
-    fd --full-path "$(git rev-parse --show-toplevel 2>/dev/null)"  "$FZF_ROOT" --type f --hidden --follow --exclude ".git" | fzf \
-        --height 25 \
-        --preview 'bat --style=numbers --color=always --line-range :20 {}'
-    )
-
-    if [ -n "${file}" ]; then
-        nvim "$file" </dev/tty ||
-            vim "$file" </dev/tty
-    fi
-    zle accept-line
-}
-zle -N ffind
-
-# ffind widget (fuzzy find from home)
-function hfind() {
-    local dir
-    dir=$(fd . "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
-        fzf +m) && cd "$dir" || return
-            zle accept-line
-        }
-    zle -N hfind
-
-# ffind widget (fuzzy find from current git repository)
-
-function gfind() {
-    local dir
-    dir=$(fd --full-path "$(fuzzy.sh)" "$FZF_ROOT" --type d --hidden --follow --exclude ".git" |
-        fzf +m) && cd "$dir" || return
-            zle accept-line
-        }
-    zle -N gfind
-
-# exit terminal widget
-function exit_terminal() {
-    exit
-    zle accept-line
-}
-zle -N exit_terminal
-
+# open terminal with [CTRL-e]
+bindkey '^e' edit-command-line
 autoload edit-command-line
 zle -N edit-command-line
 
 
-# MAPPING WIDGETS: ------------------------------------------------------------
+## findhome ()
+#    fzf find from home.
+function findhome() {
+    local dir
+    dir=$(fd . "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return zle accept-line
+}
+zle -N findhome
+bindkey -M vicmd "/" findhome
 
-# exit terminal using [q]: normal mode
-bindkey -M vicmd 'q' exit_terminal # in vim cmd mode
 
-# source dotfiles using [`] in normal & insert mode
-bindkey -M viins "\`" source_dotfiles
-bindkey -M vicmd "\`" source_dotfiles
+## findgit ()
+#    Constrains fzf to git repo in insider one
+function findgit() {
 
-# fuzzy find open a file using ['] in insert mode
-bindkey -M vicmd "'" ffind
+    # clear previous line contents
+    zle kill-whole-line
 
-# fuzzy find (from home directory) and cd using [;] in normal mode
-bindkey -M vicmd "/" hfind
+    local dir
+    local location
 
-# fuzzy find (from current git repo) and cd using [/] in normal mode
-bindkey -M vicmd ";" gfind
+    # is path a git repo?
+    location=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "${location// }" ]]; then
 
-# open terminal with [CTRL-e]
-bindkey '^e' edit-command-line
+        # iff not, run global search from home
+        dir=$(fd . "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return
+    else
+
+        # iff yes, constrain search to git repo
+        dir=$(fd --full-path "$(fuzzy.sh)" "$HOME" --type d --hidden --follow --exclude ".git" -j8 | fzf +m) && cd "$dir" || return
+    fi
+
+    # is dir valid?
+    if [[ -z "${dir// }" ]]; then
+        # iff not, exit and remain in vi cmd mode
+        zle vi-cmd-mode
+    fi
+}
+zle -N findgit
+bindkey -M vicmd ";" findgit
+
+
+# findfile ()
+#   Finds and open file.
+function findfile() {
+
+    # clear previous line contents
+    zle kill-whole-line
+
+    local dir
+    local file
+
+    # is dir a git repo?
+    dir=$(git rev-parse --show-toplevel 2>/dev/null)
+    if [[ -z "${dir// }" ]]; then
+
+        # iff not, run global search from home
+        file=$(
+        fd --full-path "$HOME" --type f --hidden --follow --exclude ".git" -j8 | fzf \
+            --height 25 \
+            --preview 'bat --style=numbers --color=always --line-range :20 {}'
+        )
+    else
+
+        # iff yes, constrain search to git repo
+        file=$(
+        fd --full-path "$(git rev-parse --show-toplevel 2>/dev/null)" --type f --hidden --follow --exclude ".git" -j8 | fzf \
+            --height 25 \
+            --preview 'bat --style=numbers --color=always --line-range :20 {}'
+        )
+    fi
+
+    # is file valid?
+    if [[ -z "${file// }" ]]; then
+        # iff not, exit and remain in vi cmd mode
+        zle vi-cmd-mode
+    else
+
+        # iff yes, open file
+        if [ -n "${file}" ]; then
+            nvim "$file" </dev/tty || vim "$file" </dev/tty
+        fi
+    fi
+}
+zle -N findfile
+bindkey -M vicmd "'" findfile
+
+
+# exit terminal
+function quit() {
+    exit
+    zle accept-line
+}
+zle -N quit
+bindkey -M vicmd 'q' quit
+
 
 # VIM movement keys
 bindkey -M menuselect 'h' vi-backward-char
