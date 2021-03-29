@@ -19,49 +19,46 @@ export TERM="xterm-256color"
 
 # persist .cabal bin
 if [ -d "$HOME/.cabal/bin" ]; then
-	export PATH="$HOME/.cabal/bin:$PATH"
+    export PATH="$HOME/.cabal/bin:$PATH"
 fi
 
 # persist .local bin
 if [ -d "$HOME/.local/bin" ]; then
-	export PATH="$HOME/.local/bin:$PATH"
+    export PATH="$HOME/.local/bin:$PATH"
 fi
 
 # persist custom scripts
 if [ -d "$HOME/dotfiles/scripts" ]; then
-	export PATH="$HOME/dotfiles/scripts:$PATH"
+    export PATH="$HOME/dotfiles/scripts:$PATH"
 fi
 
 # persist Vim in linux-gnu
 if [[ "$OSTYPE" == "linux-gnu" ]]; then
-	export EDITOR=/usr/bin/vim
-	export VISUAL=/usr/bin/vim
+    export EDITOR=/usr/bin/vim
+    export VISUAL=/usr/bin/vim
 fi
 
 # persist lib path in darwin
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	export LIBRARY_PATH=/usr/local/lib
+    export LIBRARY_PATH=/usr/local/lib
 fi
 
 # persist clang in darwin
 if [[ "$OSTYPE" == "darwin"* ]]; then
-	export AR=/usr/local/opt/llvm/bin/llvm-ar
-	export LD=/usr/local/opt/llvm/bin/llvm-ld
-	export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
-	export CPPFLAGS="-I/usr/local/opt/llvm/include"
-	export PATH="/usr/local/opt/llvm/bin:$PATH"
+    export AR=/usr/local/opt/llvm/bin/llvm-ar
+    export LD=/usr/local/opt/llvm/bin/llvm-ld
+    export LDFLAGS="-L/usr/local/opt/llvm/lib -Wl,-rpath,/usr/local/opt/llvm/lib"
+    export CPPFLAGS="-I/usr/local/opt/llvm/include"
+    export PATH="/usr/local/opt/llvm/bin:$PATH"
 fi
 
 # FUZZY FIND CONFIG:
 export FZF_BASE="$HOME/.fzf"
 
 if [[ "$OSTYPE" == "linux-gnu"* ]]; then
-	# fzf default for linux-gnu
-	export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
-
+    export FZF_DEFAULT_COMMAND='fdfind --type f --hidden --follow --exclude .git'
 elif [[ "$OSTYPE" == "darwin"* ]]; then
-	# fzf default for macOS
-	export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
+    export FZF_DEFAULT_COMMAND='fd --type f --hidden --follow --exclude .git'
 fi
 
 export FZF_DEFAULT_OPTS='--layout=reverse --height  20'
