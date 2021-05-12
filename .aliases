@@ -46,6 +46,8 @@ alias update-xmonad='xmonad-sync.sh'
 # update ultisnips
 alias update-ultisnips='snippets-sync.sh'
 
+alias print-src='print-src.sh'
+
 
 ################################################################
 #                          SHORTCUTS                           #
@@ -70,6 +72,9 @@ alias down='cd ~/Downloads'
 # hotspotshield
 alias disc='hotspotshield disconnect'
 alias conn='hotspotshield connect US'
+
+# caesium-clt
+alias compress='caesiumclt -q 0 -R -o'
 
 ################################################################
 #                          temp                                #
